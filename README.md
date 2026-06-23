@@ -8,7 +8,7 @@ uma **análise completa** com o provável vencedor e a explicação do porquê.
 
 ## ✨ O que ela faz
 
-- **Tabela automática** dos 72 jogos da fase de grupos, gerada a partir dos 12 grupos (rodízio), além do chaveamento do mata-mata (formato inédito de 48 seleções, com 32-avos de final).
+- **Tabela automática** dos 72 jogos da fase de grupos, gerada a partir do calendário real, além do chaveamento do mata-mata (formato inédito de 48 seleções, com 32-avos de final).
 - **Análise de cada jogo** ao clicar, contendo:
   - 🔮 **Provável vencedor** com probabilidades de vitória/empate/derrota e placar estimado;
   - ⚔️ **Forma de jogar** de cada seleção (estilo + formação);
@@ -16,8 +16,8 @@ uma **análise completa** com o provável vencedor e a explicação do porquê.
   - ★ **Destaques** (principais jogadores);
   - 🔑 **Fatores decisivos** que explicam o palpite (qualidade, momento, fator casa, desfalques, tradição).
 - **Filtros** por seleção, grupo e situação (hoje / a disputar / encerrados).
-- **Classificação projetada** por grupo e **chaveamento** do mata-mata.
-- **Atualizar ao vivo** (best-effort): tenta buscar placares recentes em uma API pública e, se não conseguir, mantém os dados pesquisados.
+- **Classificação** por grupo (com base nos resultados reais) e **chaveamento** do mata-mata.
+- **Atualização automática de placares** via GitHub Actions agendado (ver abaixo).
 
 ## ▶️ Como usar
 
@@ -40,15 +40,40 @@ explicação do porquê.
 
 > É uma ferramenta **analítica e de entretenimento**. As previsões são estimativas e não garantem resultados.
 
+## 🔄 Atualização automática de placares
+
+Os placares ficam em `assets/js/dados.js` (lista `CALENDARIO`). Um GitHub Actions
+agendado (`.github/workflows/atualizar.yml`) busca os resultados numa API de futebol,
+atualiza o arquivo e republica o site sozinho — **sem backend**.
+
+**Como ativar:**
+
+1. Crie uma conta gratuita em **[football-data.org](https://www.football-data.org/)** e copie seu token de API.
+2. No repositório: **Settings → Secrets and variables → Actions → New repository secret**
+   - **Name:** `FOOTBALL_API_KEY`
+   - **Secret:** seu token
+3. Pronto. O workflow roda a cada 15 min (junho/julho) e também pode ser disparado em
+   **Actions → Atualizar resultados → Run workflow**.
+
+Detalhes:
+- Só aplica placares de jogos **finalizados** (não marca jogo em andamento como encerrado).
+- À prova de falhas: sem chave / erro de rede / sem novidades ⇒ **não altera nada** (o site mantém os dados atuais).
+- Atualização "quase em tempo real" (atraso de minutos; o GitHub pode atrasar agendamentos).
+- Para usar **outra API**, edite a função `buscarPlacares()` em `scripts/atualizar-resultados.js`.
+- Teste local sem rede: `MOCK=1 node scripts/atualizar-resultados.js` (lembre de `git checkout` depois).
+
 ## 🗂️ Estrutura
 
 ```
-index.html                 # página
-assets/css/estilo.css      # estilo (tema escuro)
-assets/js/dados.js         # base: 48 seleções, 12 grupos, resultados, calendário
-assets/js/analise.js       # motor de previsão e geração dos textos
-assets/js/app.js           # interface: tabela, filtros, abas e modal
-scripts/validar.js         # validação (node scripts/validar.js)
+index.html                          # página
+assets/css/estilo.css               # estilo (tema escuro)
+assets/js/dados.js                  # base: 48 seleções, 12 grupos, calendário + placares
+assets/js/analise.js                # motor de previsão e geração dos textos
+assets/js/app.js                    # interface: tabela, filtros, abas e modal
+scripts/validar.js                  # validação (node scripts/validar.js)
+scripts/atualizar-resultados.js     # atualizador de placares (via API)
+.github/workflows/deploy.yml        # publica no GitHub Pages a cada push na main
+.github/workflows/atualizar.yml     # busca placares e republica (agendado)
 ```
 
 ## ✅ Validação

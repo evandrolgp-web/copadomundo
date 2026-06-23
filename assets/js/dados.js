@@ -418,6 +418,7 @@
     ["L", 2, "2026-06-23", "ENG", "GHA", null, null], ["L", 2, "2026-06-23", "PAN", "CRO", null, null],
     ["L", 3, "2026-06-27", "PAN", "ENG", null, null], ["L", 3, "2026-06-27", "CRO", "GHA", null, null]
   ];
+  // FIM_CALENDARIO  (não remova: marcador usado pela atualização automática)
 
   /* -------------------------------------------------------------------------
      Estrutura do mata-mata (chaveamento oficial do formato de 48 seleções).

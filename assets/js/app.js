@@ -372,6 +372,10 @@
     JOGOS = gerarJogos();
     calcularMomento();
 
+    // selo de data (reflete a atualização automática dos resultados)
+    var selo = $("#data-dados");
+    if (selo) selo.textContent = D.TORNEIO.dataDados;
+
     // abas
     document.querySelectorAll(".aba").forEach(function (a) {
       a.addEventListener("click", function () {

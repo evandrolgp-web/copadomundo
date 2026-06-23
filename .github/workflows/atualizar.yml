@@ -1,0 +1,71 @@
+name: Atualizar resultados
+
+# Busca os placares numa API de futebol e republica o site automaticamente.
+# Roda a cada 15 min em junho/julho (período da Copa) e sob demanda.
+# Requer o secret FOOTBALL_API_KEY (ver README).
+on:
+  schedule:
+    - cron: "*/15 * * 6,7 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Compartilha o grupo "pages" com o deploy para não publicar dois ao mesmo tempo
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Buscar placares e atualizar dados
+        id: upd
+        env:
+          FOOTBALL_API_KEY: ${{ secrets.FOOTBALL_API_KEY }}
+        run: |
+          node scripts/atualizar-resultados.js
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "mudou=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "mudou=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commitar atualização
+        if: steps.upd.outputs.mudou == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Atualiza placares automaticamente [skip ci]"
+          git push
+
+      # Publica no Pages somente quando houve mudança
+      - name: Configurar Pages
+        if: steps.upd.outputs.mudou == 'true'
+        uses: actions/configure-pages@v5
+
+      - name: Enviar artefato
+        if: steps.upd.outputs.mudou == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Publicar no GitHub Pages
+        id: deployment
+        if: steps.upd.outputs.mudou == 'true'
+        uses: actions/deploy-pages@v4
