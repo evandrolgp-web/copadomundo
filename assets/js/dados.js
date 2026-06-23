@@ -411,7 +411,7 @@
     ["J", 3, "2026-06-27", "JOR", "ARG", null, null], ["J", 3, "2026-06-27", "ALG", "AUT", null, null],
     // Grupo K (rodada 2 em andamento hoje, 23/06)
     ["K", 1, "2026-06-17", "POR", "COD", 1, 1], ["K", 1, "2026-06-18", "COL", "UZB", 3, 1],
-    ["K", 2, "2026-06-23", "POR", "UZB", null, null], ["K", 2, "2026-06-23", "COL", "COD", null, null],
+    ["K", 2, "2026-06-23", "POR", "UZB", 5, 0], ["K", 2, "2026-06-23", "COL", "COD", null, null],
     ["K", 3, "2026-06-27", "POR", "COL", null, null], ["K", 3, "2026-06-27", "COD", "UZB", null, null],
     // Grupo L (rodada 2 em andamento hoje, 23/06)
     ["L", 1, "2026-06-17", "ENG", "CRO", 4, 2], ["L", 1, "2026-06-17", "GHA", "PAN", 1, 0],

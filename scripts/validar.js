@@ -31,9 +31,10 @@ check(Object.values(cont).every(n => n === 3), "cada seleção joga 3 vezes na f
 const pares = new Set(cal.map(c => [c[3], c[4]].sort().join("-")));
 check(pares.size === 72, "nenhum confronto repetido (72 únicos)");
 
-// jogos com placar
+// jogos com placar (cresce conforme a Copa avança)
 const comPlacar = cal.filter(c => c[5] != null && c[6] != null).length;
-check(comPlacar === 44, "44 jogos com placar real (" + comPlacar + ")");
+check(comPlacar >= 44 && comPlacar <= 72, "jogos com placar entre 44 e 72 (" + comPlacar + ")");
+check(cal.every(c => (c[5] == null) === (c[6] == null)), "placar consistente (ambos vazios ou ambos preenchidos)");
 
 // motor de análise
 const p = A.prever(D.SELECOES.BRA, D.SELECOES.HAI, {});
