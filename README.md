@@ -63,6 +63,33 @@ Detalhes:
 - Para usar **outra API**, edite a função `buscarPlacares()` em `scripts/atualizar-resultados.js`.
 - Teste local sem rede: `MOCK=1 node scripts/atualizar-resultados.js` (lembre de `git checkout` depois).
 
+### Atualização pontual (gatilho externo)
+
+O `cron` do GitHub é "melhor esforço" e pode atrasar/pular execuções. Para
+disparos pontuais (~5 min), use um agendador externo gratuito chamando o
+`workflow_dispatch` da API do GitHub:
+
+1. **Crie um token** em GitHub → Settings → Developer settings → Personal access
+   tokens → **Fine-grained tokens**:
+   - Repository access: somente `copadomundo`
+   - Permissions → **Actions: Read and write**
+   - Gere e **copie o token** (mantenha em segredo).
+2. **Num cron externo** (ex.: [cron-job.org](https://cron-job.org)), crie um job:
+   - **URL:** `https://api.github.com/repos/evandrolgp-web/copadomundo/actions/workflows/atualizar.yml/dispatches`
+   - **Método:** `POST`
+   - **Headers:**
+     - `Authorization: Bearer SEU_TOKEN`
+     - `Accept: application/vnd.github+json`
+     - `X-GitHub-Api-Version: 2022-11-28`
+     - `Content-Type: application/json`
+   - **Body:** `{"ref":"main"}`
+   - **Intervalo:** a cada 5 min (ou só nas horas de jogo)
+3. Sucesso = **HTTP 204**. Uma nova execução aparece em **Actions** como `workflow_dispatch`.
+
+> O token fica guardado no serviço de cron — use um PAT restrito a este repo,
+> com expiração, e **nunca** o compartilhe em prints/chat. O `cron` interno do
+> GitHub continua ativo como reserva.
+
 ## 🗂️ Estrutura
 
 ```
