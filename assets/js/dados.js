@@ -1,0 +1,433 @@
+/* ===========================================================================
+   dados.js — Base de dados da Copa do Mundo 2026
+   Compilada a partir de pesquisa na internet em 23/06/2026.
+   Cada seleção traz: estilo de jogo, formação, destaques, desfalques, forma,
+   nota de força (0-100) e títulos mundiais — insumos do motor de análise.
+   =========================================================================== */
+
+(function (raiz) {
+  "use strict";
+
+  // Metadados do torneio --------------------------------------------------
+  var TORNEIO = {
+    nome: "Copa do Mundo FIFA 2026",
+    sedes: "Estados Unidos, Canadá e México",
+    selecoes: 48,
+    grupos: 12,
+    dataDados: "23/06/2026",
+    hoje: "2026-06-23"
+  };
+
+  // Cidades-sede (para indicação de local dos jogos) ----------------------
+  var CIDADES = [
+    "Cidade do México", "Guadalajara", "Monterrey",
+    "Toronto", "Vancouver",
+    "Nova York/Nova Jersey", "Los Angeles", "Dallas", "Atlanta", "Houston",
+    "Miami", "Filadélfia", "São Francisco", "Seattle", "Kansas City", "Boston"
+  ];
+
+  /* -------------------------------------------------------------------------
+     SELEÇÕES — perfis analíticos
+     nota: força estimada (base para a previsão); titulos: Copas conquistadas
+     ------------------------------------------------------------------------- */
+  var SELECOES = {
+    // ----- Grupo A -----
+    MEX: { nome: "México", flag: "🇲🇽", grupo: "A", conf: "Concacaf", anfitriao: true, nota: 75, titulos: 0, tecnico: "Javier Aguirre",
+      formacao: "4-3-3",
+      estilo: "joga com posse de bola, intensidade e o apoio fervoroso da torcida em casa; aposta na velocidade pelos lados e na pressão alta",
+      destaques: ["Raúl Jiménez (centroavante, já marcou no torneio)", "Santiago Giménez (artilheiro)", "Edson Álvarez (volante de marcação)", "Luis Malagón (goleiro)"],
+      desfalques: [],
+      forma: "Anfitriã embalada pelo fator casa; começo sólido na fase de grupos" },
+    RSA: { nome: "África do Sul", flag: "🇿🇦", grupo: "A", conf: "CAF", nota: 66, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "time jovem e veloz, que aposta em transições rápidas e marcação em bloco médio",
+      destaques: ["Lyle Foster (atacante)", "Percy Tau (experiência)", "Teboho Mokoena (meio-campo)"],
+      desfalques: [],
+      forma: "Surpresa positiva das Eliminatórias africanas" },
+    KOR: { nome: "Coreia do Sul", flag: "🇰🇷", grupo: "A", conf: "AFC", nota: 72, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "intensidade física, pressing coordenado e perigo no contra-ataque conduzido por Son",
+      destaques: ["Son Heung-min (capitão e estrela)", "Lee Kang-in (criação)", "Kim Min-jae (zaga)"],
+      desfalques: [],
+      forma: "Sempre competitiva, depende das individualidades ofensivas" },
+    CZE: { nome: "Tchéquia", flag: "🇨🇿", grupo: "A", conf: "UEFA", nota: 70, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "organização defensiva, jogo direto e perigo nas bolas paradas",
+      destaques: ["Patrik Schick (centroavante)", "Adam Hložek (versatilidade ofensiva)"],
+      desfalques: [],
+      forma: "Equipe regular, aposta na eficiência" },
+
+    // ----- Grupo B -----
+    CAN: { nome: "Canadá", flag: "🇨🇦", grupo: "B", conf: "Concacaf", anfitriao: true, nota: 73, titulos: 0, tecnico: "Jesse Marsch",
+      formacao: "4-3-3",
+      estilo: "futebol vertical, veloz e agressivo, com transições rápidas e pressão alta típica de Marsch",
+      destaques: ["Jonathan David (hat-trick na goleada sobre o Catar)", "Cyle Larin (faro de gol)", "Tajon Buchanan (velocidade)"],
+      desfalques: ["Alphonso Davies (lesão — desfalque pesadíssimo, é o principal jogador)"],
+      forma: "Goleou o Catar por 6 a 0 e vive grande fase como anfitriã" },
+    BIH: { nome: "Bósnia e Herzeg.", flag: "🇧🇦", grupo: "B", conf: "UEFA", nota: 70, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "equipe física, com Džeko como referência e jogo apoiado nas bolas alçadas",
+      destaques: ["Edin Džeko (veterano artilheiro)", "Sead Kolašinac (intensidade)"],
+      desfalques: [],
+      forma: "Volta a uma Copa apostando na experiência" },
+    QAT: { nome: "Catar", flag: "🇶🇦", grupo: "B", conf: "AFC", nota: 65, titulos: 0,
+      formacao: "3-5-2",
+      estilo: "busca a posse e a troca de passes curtos típica da escola asiática, mas sofre defensivamente",
+      destaques: ["Akram Afif (craque, bola parada)", "Almoez Ali (centroavante)"],
+      desfalques: [],
+      forma: "Estreia para esquecer: levou 6 do Canadá" },
+    SUI: { nome: "Suíça", flag: "🇨🇭", grupo: "B", conf: "UEFA", nota: 76, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "muito bem organizada, sólida defensivamente e eficiente nas transições",
+      destaques: ["Granit Xhaka (cérebro do meio)", "Manuel Akanji (zaga)", "Dan Ndoye (velocidade)", "Breel Embolo (ataque)"],
+      desfalques: [],
+      forma: "Time maduro e consistente, candidato a surpreender" },
+
+    // ----- Grupo C -----
+    BRA: { nome: "Brasil", flag: "🇧🇷", grupo: "C", conf: "Conmebol", nota: 88, titulos: 5, tecnico: "Carlo Ancelotti",
+      formacao: "4-3-3",
+      estilo: "posse de bola, criatividade pelos lados e explosão individual; sob Ancelotti, busca mais equilíbrio e solidez defensiva",
+      destaques: ["Vinícius Júnior (estrela do ataque)", "Raphinha (drible e gols)", "Bruno Guimarães (meio-campo)", "Marquinhos (zaga)", "Alisson (goleiro)"],
+      desfalques: ["Rodrygo (ruptura de LCA, fora)", "Éder Militão (lesão)", "Estêvão (lesão muscular)"],
+      forma: "Pentacampeão jogando 'sob os holofotes mais baixos'; 4 pontos na fase de grupos" },
+    MAR: { nome: "Marrocos", flag: "🇲🇦", grupo: "C", conf: "CAF", nota: 80, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "defesa sólida e compacta, transições letais e qualidade técnica — herança da campanha de 4º lugar em 2022",
+      destaques: ["Achraf Hakimi (lateral ofensivo, líder)", "Brahim Díaz (criação)", "Youssef En-Nesyri (centroavante)", "Bilal El Khannouss (talento)"],
+      desfalques: [],
+      forma: "Uma das melhores defesas do torneio; 4 pontos, brigando pela liderança" },
+    HAI: { nome: "Haiti", flag: "🇭🇹", grupo: "C", conf: "Concacaf", nota: 58, titulos: 0,
+      formacao: "4-4-2",
+      estilo: "muita raça e entrega física, aposta no contra-ataque e em bolas paradas",
+      destaques: ["Frantzdy Pierrot (centroavante)", "Duckens Nazon (referência)"],
+      desfalques: [],
+      forma: "Zebra do grupo, vive a emoção de uma Copa rara" },
+    SCO: { nome: "Escócia", flag: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", grupo: "C", conf: "UEFA", nota: 70, titulos: 0, tecnico: "Steve Clarke",
+      formacao: "3-4-2-1",
+      estilo: "intensidade, marcação aguerrida e muito perigo nas bolas paradas",
+      destaques: ["Scott McTominay (chegada à área)", "Andy Robertson (capitão)", "John McGinn (meio-campo)"],
+      desfalques: [],
+      forma: "Disciplinada e fisicamente forte, briga por uma vaga histórica" },
+
+    // ----- Grupo D -----
+    USA: { nome: "Estados Unidos", flag: "🇺🇸", grupo: "D", conf: "Concacaf", anfitriao: true, nota: 77, titulos: 0, tecnico: "Mauricio Pochettino", classificado: true, lider: true,
+      formacao: "4-3-3",
+      estilo: "pressing alto, atletismo e transições rápidas; sob Pochettino, ganhou organização e ambição",
+      destaques: ["Christian Pulisic (estrela e capitão)", "Folarin Balogun (2 gols na estreia)", "Weston McKennie (meio-campo)", "Antonee Robinson (lateral)"],
+      desfalques: ["Johnny Cardoso (cirurgia no tornozelo)"],
+      forma: "Já garantiu a 1ª colocação do Grupo D como anfitriã" },
+    PAR: { nome: "Paraguai", flag: "🇵🇾", grupo: "D", conf: "Conmebol", nota: 68, titulos: 0, tecnico: "Gustavo Alfaro",
+      formacao: "4-4-2",
+      estilo: "muito sólido defensivamente, físico e perigoso no contra-ataque",
+      destaques: ["Miguel Almirón (velocidade)", "Antonio Sanabria (ataque)", "Gustavo Gómez (zaga e liderança)"],
+      desfalques: [],
+      forma: "Reorganizado sob Alfaro, aposta na competitividade" },
+    AUS: { nome: "Austrália", flag: "🇦🇺", grupo: "D", conf: "AFC", nota: 70, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "organização, intensidade física e espírito coletivo",
+      destaques: ["Mathew Ryan (goleiro e capitão)", "Jackson Irvine (meio-campo)", "Riley McGree (criação)"],
+      desfalques: [],
+      forma: "Os Socceroos chegam disciplinados e combativos" },
+    TUR: { nome: "Turquia", flag: "🇹🇷", grupo: "D", conf: "UEFA", nota: 74, titulos: 0, tecnico: "Vincenzo Montella",
+      formacao: "4-2-3-1",
+      estilo: "geração jovem e talentosa, futebol técnico e ofensivo conduzido pelo meio",
+      destaques: ["Arda Güler (joia da criação)", "Hakan Çalhanoğlu (maestro)", "Kenan Yıldız (talento)", "Kerem Aktürkoğlu (velocidade)"],
+      desfalques: [],
+      forma: "Uma das seleções mais empolgantes em ascensão" },
+
+    // ----- Grupo E -----
+    GER: { nome: "Alemanha", flag: "🇩🇪", grupo: "E", conf: "UEFA", nota: 85, titulos: 4, tecnico: "Julian Nagelsmann", classificado: true,
+      formacao: "4-2-3-1",
+      estilo: "posse moderna, pressing intenso e laterais agressivos; muita qualidade no meio-campo",
+      destaques: ["Florian Wirtz (criação de elite)", "Jamal Musiala (drible e gols)", "Deniz Undav (3 gols no torneio)", "Joshua Kimmich (líder)", "Antonio Rüdiger (zaga)"],
+      desfalques: [],
+      forma: "Já classificada; ataque produtivo lidera o grupo" },
+    CUW: { nome: "Curaçao", flag: "🇨🇼", grupo: "E", conf: "Concacaf", nota: 58, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "surpresa caribenha com vários atletas formados na Holanda; jogo técnico e ousado",
+      destaques: ["Tahith Chong (talento)", "Juninho Bacuna (meio)", "Leandro Bacuna (experiência)"],
+      desfalques: [],
+      forma: "Menor país a disputar uma Copa — história pura" },
+    CIV: { nome: "Costa do Marfim", flag: "🇨🇮", grupo: "E", conf: "CAF", nota: 74, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "potência física, velocidade nas pontas e transições verticais",
+      destaques: ["Sébastien Haller (centroavante)", "Simon Adingra (velocidade)", "Amad Diallo (drible)", "Franck Kessié (meio)"],
+      desfalques: [],
+      forma: "Campeã africana de 2023, chega forte" },
+    ECU: { nome: "Equador", flag: "🇪🇨", grupo: "E", conf: "Conmebol", nota: 74, titulos: 0, tecnico: "Sebastián Beccacece",
+      formacao: "4-3-3",
+      estilo: "time jovem, intenso e com uma das defesas mais firmes das Eliminatórias sul-americanas",
+      destaques: ["Moisés Caicedo (volante de elite)", "Enner Valencia (experiência)", "Kendry Páez (joia)", "Pervis Estupiñán (lateral)"],
+      desfalques: ["Moisés Caicedo (suspenso na estreia por expulsão)"],
+      forma: "Defesa sólida e geração promissora" },
+
+    // ----- Grupo F -----
+    NED: { nome: "Holanda", flag: "🇳🇱", grupo: "F", conf: "UEFA", nota: 84, titulos: 0, tecnico: "Ronald Koeman",
+      formacao: "4-3-3",
+      estilo: "construção paciente de trás, posse de bola e amplitude pelas pontas",
+      destaques: ["Cody Gakpo (ataque)", "Virgil van Dijk (líder da zaga)", "Frenkie de Jong (meio)", "Xavi Simons (criação)", "Memphis Depay (referência)"],
+      desfalques: ["Matthijs de Ligt (cirurgia nas costas)", "Jurriën Timber (lesão)"],
+      forma: "Forte candidata, apesar dos desfalques na defesa" },
+    JPN: { nome: "Japão", flag: "🇯🇵", grupo: "F", conf: "AFC", nota: 76, titulos: 0, tecnico: "Hajime Moriyasu",
+      formacao: "3-4-2-1",
+      estilo: "técnica refinada, intensidade e transições velozes; talvez a melhor seleção asiática",
+      destaques: ["Takefusa Kubo (criação)", "Daichi Kamada (meio)", "Wataru Endo (volante)", "Ritsu Doan (ataque)"],
+      desfalques: ["Kaoru Mitoma (lesão na coxa — perda importante)"],
+      forma: "Time perigoso, acostumado a assustar os grandes" },
+    SWE: { nome: "Suécia", flag: "🇸🇪", grupo: "F", conf: "UEFA", nota: 73, titulos: 0,
+      formacao: "4-4-2",
+      estilo: "físico, forte nas bolas paradas e letal no contra-ataque com sua dupla de ataque",
+      destaques: ["Alexander Isak (centroavante de classe)", "Viktor Gyökeres (artilheiro)", "Dejan Kulusevski (criação)"],
+      desfalques: [],
+      forma: "Ataque temível, é a incógnita do grupo" },
+    TUN: { nome: "Tunísia", flag: "🇹🇳", grupo: "F", conf: "CAF", nota: 68, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "defesa organizada e compacta, jogo de contenção e contra-ataques pontuais",
+      destaques: ["Hannibal Mejbri (meio-campo)", "Youssef Msakni (experiência)", "Aïssa Laïdouni (volante)"],
+      desfalques: [],
+      forma: "Disciplinada, dificulta a vida de qualquer adversário" },
+
+    // ----- Grupo G -----
+    BEL: { nome: "Bélgica", flag: "🇧🇪", grupo: "G", conf: "UEFA", nota: 80, titulos: 0, tecnico: "Rudi Garcia",
+      formacao: "4-2-3-1",
+      estilo: "qualidade técnica individual, posse de bola e criatividade no último terço",
+      destaques: ["Kevin De Bruyne (maestro)", "Jérémy Doku (velocidade)", "Romelu Lukaku (centroavante)", "Youri Tielemans (meio)"],
+      desfalques: [],
+      forma: "Geração de ouro em transição, ainda muito perigosa" },
+    EGY: { nome: "Egito", flag: "🇪🇬", grupo: "G", conf: "CAF", nota: 72, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "depende muito de Salah, defende em bloco e ataca em transições rápidas",
+      destaques: ["Mohamed Salah (estrela absoluta)", "Omar Marmoush (ataque em alta)", "Mostafa Mohamed (centroavante)"],
+      desfalques: [],
+      forma: "Com Salah, sempre um perigo" },
+    IRN: { nome: "Irã", flag: "🇮🇷", grupo: "G", conf: "AFC", nota: 70, titulos: 0,
+      formacao: "4-1-4-1",
+      estilo: "muito sólido defensivamente, físico e perigoso no contra-ataque e nas bolas paradas",
+      destaques: ["Mehdi Taremi (centroavante)", "Alireza Jahanbakhsh (experiência)", "Sardar Azmoun (ataque)"],
+      desfalques: [],
+      forma: "Tradicional força asiática, difícil de bater" },
+    NZL: { nome: "Nova Zelândia", flag: "🇳🇿", grupo: "G", conf: "OFC", nota: 60, titulos: 0,
+      formacao: "5-3-2",
+      estilo: "muito físico, defende com linhas baixas e aposta nas bolas paradas com Chris Wood",
+      destaques: ["Chris Wood (centroavante)", "Marko Stamenić (meio)"],
+      desfalques: [],
+      forma: "Representante da Oceania, joga pela surpresa" },
+
+    // ----- Grupo H -----
+    ESP: { nome: "Espanha", flag: "🇪🇸", grupo: "H", conf: "UEFA", nota: 91, titulos: 1, tecnico: "Luis de la Fuente",
+      formacao: "4-3-3",
+      estilo: "posse de bola dominante, pressing alto e o tiki-taka moderno; campeã da Eurocopa 2024 e quase imbatível desde então",
+      destaques: ["Lamine Yamal (joia do ataque)", "Pedri (meio-campo de elite)", "Nico Williams (velocidade)", "Rodri (volante)", "Mikel Merino (chegada)"],
+      desfalques: ["Fermín López (fratura no metatarso)"],
+      forma: "Tropeço na estreia (empate com Cabo Verde), mas goleou a Arábia por 4 a 0" },
+    CPV: { nome: "Cabo Verde", flag: "🇨🇻", grupo: "H", conf: "CAF", nota: 62, titulos: 0,
+      formacao: "4-4-2",
+      estilo: "defesa compacta, muita entrega e contra-ataques — a surpresa simpática do torneio",
+      destaques: ["Ryan Mendes (capitão)", "Garry Rodrigues (criação)", "Bebé (experiência)"],
+      desfalques: [],
+      forma: "Estreia histórica e já segurou a Espanha num empate" },
+    KSA: { nome: "Arábia Saudita", flag: "🇸🇦", grupo: "H", conf: "AFC", nota: 65, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "busca a posse no meio, é fisicamente intensa, mas oscila defensivamente",
+      destaques: ["Salem Al-Dawsari (estrela)", "Firas Al-Buraikan (ataque)"],
+      desfalques: [],
+      forma: "Levou 4 da Espanha; precisa reagir" },
+    URU: { nome: "Uruguai", flag: "🇺🇾", grupo: "H", conf: "Conmebol", nota: 80, titulos: 2, tecnico: "Marcelo Bielsa",
+      formacao: "4-3-3",
+      estilo: "garra uruguaia somada à intensidade e ao pressing de Bielsa; sólido atrás e vertical no ataque",
+      destaques: ["Federico Valverde (motor do meio)", "Darwin Núñez (centroavante)", "Ronald Araújo (zaga)", "Facundo Pellistri (velocidade)"],
+      desfalques: [],
+      forma: "Sob Bielsa, é um dos azarões mais perigosos" },
+
+    // ----- Grupo I -----
+    FRA: { nome: "França", flag: "🇫🇷", grupo: "I", conf: "UEFA", nota: 92, titulos: 2, tecnico: "Didier Deschamps", classificado: true, lider: true,
+      formacao: "4-3-3",
+      estilo: "elenco talentosíssimo, transições letais e solidez; talvez o time mais forte individualmente do mundo",
+      destaques: ["Kylian Mbappé (o grande astro)", "Ousmane Dembélé (drible e gols)", "Michael Olise (criação)", "Aurélien Tchouaméni (volante)", "William Saliba (zaga)"],
+      desfalques: ["Hugo Ekitike (ruptura no tendão de Aquiles)"],
+      forma: "Favorita ao título (+400): venceu Senegal (3-1) e Iraque (3-0), 6 pontos e liderança" },
+    SEN: { nome: "Senegal", flag: "🇸🇳", grupo: "I", conf: "CAF", nota: 78, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "potência física, velocidade e qualidade — uma das forças da África",
+      destaques: ["Sadio Mané (estrela)", "Nicolas Jackson (centroavante)", "Pape Matar Sarr (meio)", "Kalidou Koulibaly (zaga)"],
+      desfalques: [],
+      forma: "Perdeu para a França, mas tem elenco para se recuperar" },
+    IRQ: { nome: "Iraque", flag: "🇮🇶", grupo: "I", conf: "AFC", nota: 64, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "defensivo e organizado, busca segurar o jogo e explorar bolas paradas",
+      destaques: ["Aymen Hussein (ataque)", "Zidane Iqbal (meio)"],
+      desfalques: [],
+      forma: "Estreante recente, briga para surpreender" },
+    NOR: { nome: "Noruega", flag: "🇳🇴", grupo: "I", conf: "UEFA", nota: 80, titulos: 0, tecnico: "Ståle Solbakken", classificado: true,
+      formacao: "4-3-3",
+      estilo: "jogo vertical e direto para municiar Haaland, com muita força física",
+      destaques: ["Erling Haaland (máquina de gols)", "Martin Ødegaard (criação)", "Alexander Sørloth (ataque)", "Antonio Nusa (velocidade)"],
+      desfalques: [],
+      forma: "Já classificada com 6 pontos; volta a uma Copa após décadas" },
+
+    // ----- Grupo J -----
+    ARG: { nome: "Argentina", flag: "🇦🇷", grupo: "J", conf: "Conmebol", nota: 90, titulos: 3, tecnico: "Lionel Scaloni", classificado: true, lider: true,
+      formacao: "4-3-3",
+      estilo: "equilíbrio perfeito entre posse, intensidade e qualidade; atual campeã mundial, com o DNA vencedor de Scaloni",
+      destaques: ["Lionel Messi (maior artilheiro da história das Copas, 5 gols no torneio)", "Lautaro Martínez (centroavante)", "Julián Álvarez (versatilidade)", "Enzo Fernández (meio)", "Emiliano Martínez (goleiro)"],
+      desfalques: ["Nicolás Otamendi (cumpriu suspensão na estreia)"],
+      forma: "Líder do Grupo J com 6 pontos; Messi em estado de graça" },
+    ALG: { nome: "Argélia", flag: "🇩🇿", grupo: "J", conf: "CAF", nota: 70, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "técnica e ofensiva, com talento individual no meio e no ataque",
+      destaques: ["Riyad Mahrez (estrela)", "Ismaël Bennacer (meio)", "Amine Gouiri (ataque)"],
+      desfalques: [],
+      forma: "Talentosa, busca repetir glórias africanas" },
+    AUT: { nome: "Áustria", flag: "🇦🇹", grupo: "J", conf: "UEFA", nota: 72, titulos: 0, tecnico: "Ralf Rangnick",
+      formacao: "4-2-2-2",
+      estilo: "pressing intenso e coletivo (selo Rangnick), muito bem organizada e agressiva",
+      destaques: ["Marcel Sabitzer (meio)", "Christoph Baumgartner (chegada)", "Konrad Laimer (volante)", "David Alaba (líder)"],
+      desfalques: [],
+      forma: "Time difícil de enfrentar pela intensidade" },
+    JOR: { nome: "Jordânia", flag: "🇯🇴", grupo: "J", conf: "AFC", nota: 62, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "defensiva e disciplinada, aposta em bolas paradas e contra-ataques",
+      destaques: ["Mousa Al-Tamari (velocidade)", "Yazan Al-Naimat (ataque)"],
+      desfalques: [],
+      forma: "Estreia histórica em Copas" },
+
+    // ----- Grupo K -----
+    POR: { nome: "Portugal", flag: "🇵🇹", grupo: "K", conf: "UEFA", nota: 87, titulos: 0, tecnico: "Roberto Martínez",
+      formacao: "4-3-3",
+      estilo: "posse de bola, meio-campo de altíssimo nível e perigo nas bolas paradas; um dos elencos mais profundos do torneio",
+      destaques: ["Cristiano Ronaldo (capitão e ídolo)", "Bruno Fernandes (criação)", "Rafael Leão (drible)", "Vitinha (meio)", "Rúben Dias (zaga)"],
+      desfalques: [],
+      forma: "Estreia decepcionante: empate em 1 a 1 com a RD Congo" },
+    COD: { nome: "RD Congo", flag: "🇨🇩", grupo: "K", conf: "CAF", nota: 70, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "muito físico e veloz, perigoso nas transições e na bola aérea",
+      destaques: ["Yoane Wissa (ataque)", "Cédric Bakambu (centroavante)", "Chancel Mbemba (zaga)"],
+      desfalques: [],
+      forma: "Surpreendeu ao segurar Portugal na estreia" },
+    UZB: { nome: "Uzbequistão", flag: "🇺🇿", grupo: "K", conf: "AFC", nota: 66, titulos: 0,
+      formacao: "4-2-3-1",
+      estilo: "organizado, fisicamente forte e aplicado nas bolas paradas",
+      destaques: ["Eldor Shomurodov (centroavante)", "Abbosbek Fayzullaev (joia da criação)"],
+      desfalques: [],
+      forma: "Estreante em Copas; perdeu para a Colômbia" },
+    COL: { nome: "Colômbia", flag: "🇨🇴", grupo: "K", conf: "Conmebol", nota: 79, titulos: 0, tecnico: "Néstor Lorenzo",
+      formacao: "4-2-3-1",
+      estilo: "posse, criatividade e muita qualidade técnica, com James orquestrando e Luis Díaz desequilibrando",
+      destaques: ["James Rodríguez (maestro)", "Luis Díaz (estrela do ataque)", "Jhon Durán (centroavante)", "Richard Ríos (meio)"],
+      desfalques: [],
+      forma: "Venceu o Uzbequistão por 3 a 1 e larga bem" },
+
+    // ----- Grupo L -----
+    ENG: { nome: "Inglaterra", flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿", grupo: "L", conf: "UEFA", nota: 89, titulos: 1, tecnico: "Thomas Tuchel",
+      formacao: "4-2-3-1",
+      estilo: "solidez defensiva somada a um ataque de elite; sob Tuchel, busca ser mais pragmática e letal",
+      destaques: ["Harry Kane (61 gols na temporada do clube)", "Jude Bellingham (meio de elite)", "Bukayo Saka (drible)", "Phil Foden (criação)", "Declan Rice (volante)"],
+      desfalques: ["Cole Palmer (lesão)"],
+      forma: "Estreia goleadora: 4 a 2 sobre a Croácia" },
+    CRO: { nome: "Croácia", flag: "🇭🇷", grupo: "L", conf: "UEFA", nota: 79, titulos: 0, tecnico: "Zlatko Dalić",
+      formacao: "4-3-3",
+      estilo: "controle absoluto do meio-campo, posse paciente e enorme experiência em mata-matas",
+      destaques: ["Luka Modrić (eterno maestro)", "Mateo Kovačić (meio)", "Joško Gvardiol (zaga moderna)", "Andrej Kramarić (ataque)"],
+      desfalques: [],
+      forma: "Perdeu para a Inglaterra; geração veterana pressionada" },
+    GHA: { nome: "Gana", flag: "🇬🇭", grupo: "L", conf: "CAF", nota: 71, titulos: 0,
+      formacao: "4-3-3",
+      estilo: "físico, veloz e direto, com transições rápidas e talento individual",
+      destaques: ["Mohammed Kudus (craque)", "Thomas Partey (volante)", "Iñaki Williams (velocidade)", "Jordan Ayew (experiência)"],
+      desfalques: [],
+      forma: "Venceu o Panamá por 1 a 0 na estreia" },
+    PAN: { nome: "Panamá", flag: "🇵🇦", grupo: "L", conf: "Concacaf", nota: 64, titulos: 0, tecnico: "Thomas Christiansen",
+      formacao: "4-4-2",
+      estilo: "muito físico e defensivo, aposta em bolas paradas e contra-ataques",
+      destaques: ["Adalberto Carrasquilla (meio)", "José Fajardo (ataque)", "Ismael Díaz (criação)"],
+      desfalques: [],
+      forma: "Perdeu por 1 a 0 para Gana, mas vendeu caro" }
+  };
+
+  /* -------------------------------------------------------------------------
+     GRUPOS — ordem reflete a posição no chaveamento (cabeça de chave primeiro)
+     ------------------------------------------------------------------------- */
+  var GRUPOS = {
+    A: ["MEX", "RSA", "KOR", "CZE"],
+    B: ["SUI", "BIH", "QAT", "CAN"],
+    C: ["BRA", "MAR", "SCO", "HAI"],
+    D: ["USA", "PAR", "AUS", "TUR"],
+    E: ["GER", "CIV", "ECU", "CUW"],
+    F: ["NED", "JPN", "SWE", "TUN"],
+    G: ["BEL", "EGY", "IRN", "NZL"],
+    H: ["ESP", "URU", "KSA", "CPV"],
+    I: ["FRA", "NOR", "SEN", "IRQ"],
+    J: ["ARG", "AUT", "ALG", "JOR"],
+    K: ["POR", "COL", "COD", "UZB"],
+    L: ["ENG", "CRO", "GHA", "PAN"]
+  };
+
+  /* -------------------------------------------------------------------------
+     Datas das rodadas por grupo (escalonadas em 11–27/jun). Indicativas.
+     ------------------------------------------------------------------------- */
+  var CRONOGRAMA = {
+    A: ["2026-06-11", "2026-06-16", "2026-06-22"],
+    B: ["2026-06-11", "2026-06-16", "2026-06-22"],
+    C: ["2026-06-12", "2026-06-17", "2026-06-23"],
+    D: ["2026-06-12", "2026-06-17", "2026-06-23"],
+    E: ["2026-06-13", "2026-06-18", "2026-06-24"],
+    F: ["2026-06-13", "2026-06-18", "2026-06-24"],
+    G: ["2026-06-14", "2026-06-19", "2026-06-25"],
+    H: ["2026-06-14", "2026-06-19", "2026-06-25"],
+    I: ["2026-06-15", "2026-06-20", "2026-06-26"],
+    J: ["2026-06-15", "2026-06-20", "2026-06-26"],
+    K: ["2026-06-13", "2026-06-18", "2026-06-23"],
+    L: ["2026-06-13", "2026-06-18", "2026-06-23"]
+  };
+
+  /* -------------------------------------------------------------------------
+     RESULTADOS confirmados (pesquisa em 23/06). Chave: "CASA-FORA".
+     O gerador aplica o placar tentando as duas ordens.
+     ------------------------------------------------------------------------- */
+  var RESULTADOS = {
+    "CAN-QAT": "6-0",
+    "FRA-SEN": "3-1",
+    "FRA-IRQ": "3-0",
+    "ESP-KSA": "4-0",
+    "ENG-CRO": "4-2",
+    "POR-COD": "1-1",
+    "UZB-COL": "1-3",
+    "GHA-PAN": "1-0"
+  };
+
+  /* -------------------------------------------------------------------------
+     Estrutura do mata-mata (chaveamento oficial do formato de 48 seleções).
+     "fonte" usa códigos: 1A = 1º do grupo A; 2B = 2º do B; 3CDE = melhor 3º
+     entre C/D/E etc. (texto apenas ilustrativo do caminho).
+     ------------------------------------------------------------------------- */
+  var MATA_MATA = [
+    { fase: "32-avos", data: "2026-06-28", m: ["1A", "3CDFGI"] },
+    { fase: "32-avos", data: "2026-06-28", m: ["1C", "2F"] },
+    { fase: "32-avos", data: "2026-06-29", m: ["1E", "3ABFHI"] },
+    { fase: "32-avos", data: "2026-06-29", m: ["1F", "2C"] },
+    { fase: "32-avos", data: "2026-06-29", m: ["2A", "2B"] },
+    { fase: "32-avos", data: "2026-06-30", m: ["1I", "3CEFHL"] },
+    { fase: "32-avos", data: "2026-06-30", m: ["1B", "3EFGIJ"] },
+    { fase: "32-avos", data: "2026-06-30", m: ["1L", "3EHIJK"] },
+    { fase: "32-avos", data: "2026-07-01", m: ["1D", "3BEFIJ"] },
+    { fase: "32-avos", data: "2026-07-01", m: ["1G", "3AHIJK"] },
+    { fase: "32-avos", data: "2026-07-01", m: ["1H", "2J"] },
+    { fase: "32-avos", data: "2026-07-02", m: ["1J", "2H"] },
+    { fase: "32-avos", data: "2026-07-02", m: ["1K", "3DEIJL"] },
+    { fase: "32-avos", data: "2026-07-02", m: ["2E", "2I"] },
+    { fase: "32-avos", data: "2026-07-03", m: ["2K", "2L"] },
+    { fase: "32-avos", data: "2026-07-03", m: ["2D", "2G"] },
+    { fase: "16-avos", data: "2026-07-04", m: ["Vencedores 32-avos", ""] },
+    { fase: "Oitavas", data: "2026-07-04", m: ["Vencedores 16-avos", ""] },
+    { fase: "Quartas", data: "2026-07-09", m: ["Vencedores das oitavas", ""] },
+    { fase: "Semifinal", data: "2026-07-14", m: ["Vencedores das quartas", ""] },
+    { fase: "Disputa de 3º", data: "2026-07-18", m: ["Perdedores das semis", ""] },
+    { fase: "FINAL", data: "2026-07-19", m: ["Finalistas", ""] }
+  ];
+
+  // Exporta tanto para browser quanto para Node (testes) ------------------
+  var DADOS = { TORNEIO: TORNEIO, CIDADES: CIDADES, SELECOES: SELECOES, GRUPOS: GRUPOS, CRONOGRAMA: CRONOGRAMA, RESULTADOS: RESULTADOS, MATA_MATA: MATA_MATA };
+  raiz.COPA_DADOS = DADOS;
+  if (typeof module !== "undefined" && module.exports) module.exports = DADOS;
+
+})(typeof window !== "undefined" ? window : this);

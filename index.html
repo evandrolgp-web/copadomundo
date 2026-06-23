@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Copa do Mundo 2026 — Central de Análises</title>
+  <meta name="description" content="Análise jogo a jogo da Copa do Mundo 2026: provável vencedor, forma de jogar, desfalques e destaques de cada seleção." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
+  <link rel="stylesheet" href="assets/css/estilo.css" />
+</head>
+<body>
+
+  <header class="topo">
+    <div class="topo-inner">
+      <div class="brand">
+        <span class="ball">⚽</span>
+        <div>
+          <h1>Copa do Mundo <span>2026</span> · Central de Análises</h1>
+          <div class="sub">EUA · Canadá · México — 48 seleções, 104 jogos</div>
+        </div>
+      </div>
+      <div class="topo-acoes">
+        <span class="status-dados"><span class="dot"></span> Dados de 23/06/2026</span>
+        <button class="btn primary" id="btn-atualizar">🔄 Atualizar ao vivo</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>Análise jogo a jogo, com provável vencedor e o porquê</h2>
+      <p>Clique em qualquer partida para ver a previsão completa: como cada seleção joga, os desfalques por lesão e suspensão, os destaques e os fatores que apontam o favorito. A tabela é gerada automaticamente a partir dos 12 grupos.</p>
+      <div class="legenda">
+        <span><span class="pill hoje">HOJE</span> em disputa hoje</span>
+        <span><span class="pill encerrado">ENCERRADO</span> já realizado</span>
+        <span><span class="pill agendado">AGENDADO</span> a disputar</span>
+        <span>🔮 previsão · 🚑 desfalques · ★ destaques</span>
+      </div>
+    </section>
+
+    <nav class="abas">
+      <div class="aba ativo" data-aba="jogos">⚽ Jogos</div>
+      <div class="aba" data-aba="grupos">📊 Grupos</div>
+      <div class="aba" data-aba="mata">🏆 Mata-mata</div>
+      <div class="aba" data-aba="sobre">ℹ️ Sobre</div>
+    </nav>
+
+    <div class="filtros" id="barra-filtros">
+      <input type="search" id="filtro-busca" placeholder="Buscar por seleção (ex.: Brasil, França)…" />
+      <select id="filtro-grupo"><option value="todos">Todos os grupos</option></select>
+      <div class="chips">
+        <span class="chip ativo" data-status="todos">Todos</span>
+        <span class="chip" data-status="hoje">Hoje</span>
+        <span class="chip" data-status="agendado">A disputar</span>
+        <span class="chip" data-status="encerrado">Encerrados</span>
+      </div>
+    </div>
+
+    <div id="conteudo"></div>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <div>⚽ Central de Análises da Copa do Mundo 2026 — ferramenta analítica e de entretenimento.</div>
+      <div class="fontes">
+        Fontes:
+        <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026" target="_blank" rel="noopener">FIFA</a>
+        <a href="https://www.espn.com/soccer/" target="_blank" rel="noopener">ESPN</a>
+        <a href="https://www.sofascore.com/football/tournament/world/world-championship/16" target="_blank" rel="noopener">Sofascore</a>
+        <a href="https://www.olympics.com/pt/noticias/copa-do-mundo-2026-tabela-classificacao-resultados" target="_blank" rel="noopener">Olympics.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast"></div>
+
+  <script src="assets/js/dados.js"></script>
+  <script src="assets/js/analise.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
