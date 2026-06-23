@@ -33,7 +33,7 @@
   <main class="container">
     <section class="hero">
       <h2>Análise jogo a jogo, com provável vencedor e o porquê</h2>
-      <p>Clique em qualquer partida para ver a previsão completa: como cada seleção joga, os desfalques por lesão e suspensão, os destaques e os fatores que apontam o favorito. A tabela é gerada automaticamente a partir dos 12 grupos.</p>
+      <p>A página abre nos <b>próximos jogos</b> (os que ainda vão acontecer). Clique em qualquer partida para ver a previsão completa: como cada seleção joga, os desfalques por lesão e suspensão, os destaques e os fatores que apontam o favorito. Use a aba <b>Por rodada</b> para ver tudo organizado por rodada.</p>
       <div class="legenda">
         <span><span class="pill hoje">HOJE</span> em disputa hoje</span>
         <span><span class="pill encerrado">ENCERRADO</span> já realizado</span>
@@ -44,6 +44,7 @@
 
     <nav class="abas">
       <div class="aba ativo" data-aba="jogos">⚽ Jogos</div>
+      <div class="aba" data-aba="rodadas">📋 Por rodada</div>
       <div class="aba" data-aba="grupos">📊 Grupos</div>
       <div class="aba" data-aba="mata">🏆 Mata-mata</div>
       <div class="aba" data-aba="sobre">ℹ️ Sobre</div>
@@ -52,11 +53,11 @@
     <div class="filtros" id="barra-filtros">
       <input type="search" id="filtro-busca" placeholder="Buscar por seleção (ex.: Brasil, França)…" />
       <select id="filtro-grupo"><option value="todos">Todos os grupos</option></select>
-      <div class="chips">
-        <span class="chip ativo" data-status="todos">Todos</span>
+      <div class="chips" id="chips-status">
+        <span class="chip ativo" data-status="proximos">Próximos</span>
         <span class="chip" data-status="hoje">Hoje</span>
-        <span class="chip" data-status="agendado">A disputar</span>
         <span class="chip" data-status="encerrado">Encerrados</span>
+        <span class="chip" data-status="todos">Todos</span>
       </div>
     </div>
 

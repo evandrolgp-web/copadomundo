@@ -13,7 +13,7 @@
   var hoje = D.TORNEIO.hoje;
 
   // Estado da UI
-  var estado = { aba: "jogos", busca: "", grupo: "todos", status: "todos" };
+  var estado = { aba: "jogos", busca: "", grupo: "todos", status: "proximos" };
   var JOGOS = [];        // jogos da fase de grupos (analisáveis)
   var MOMENTO = {};      // momento (forma) por seleção, vindo dos resultados
 
@@ -80,12 +80,20 @@
   }
 
   // ------------------------------ filtros ----------------------------------
-  function jogosFiltrados() {
+  // comStatus=false ignora o filtro de situação (usado na aba "Por rodada")
+  function jogosFiltrados(comStatus) {
     var b = estado.busca.toLowerCase();
     return JOGOS.filter(function (j) {
       var ca = D.SELECOES[j.casa], fo = D.SELECOES[j.fora];
       if (estado.grupo !== "todos" && j.grupo !== estado.grupo) return false;
-      if (estado.status !== "todos" && statusDoJogo(j) !== estado.status) return false;
+      if (comStatus && estado.status !== "todos") {
+        var st = statusDoJogo(j);
+        if (estado.status === "proximos") {
+          if (st === "encerrado") return false;       // próximos = hoje + a disputar
+        } else if (st !== estado.status) {
+          return false;
+        }
+      }
       if (b) {
         var alvo = (ca.nome + " " + fo.nome + " grupo " + j.grupo).toLowerCase();
         if (alvo.indexOf(b) === -1) return false;
@@ -135,7 +143,7 @@
   }
 
   function renderJogos(container) {
-    var js = jogosFiltrados();
+    var js = jogosFiltrados(true);
     if (!js.length) {
       container.appendChild(el('<div class="vazio"><div class="big">🔍</div>Nenhum jogo encontrado com esses filtros.</div>'));
       return;
@@ -147,6 +155,28 @@
       container.appendChild(el('<div class="dia-rotulo">' + esc(rotulo) + "</div>"));
       var grade = el('<div class="grade-jogos"></div>');
       porData[data].forEach(function (j) { grade.appendChild(cardJogo(j)); });
+      container.appendChild(grade);
+    });
+  }
+
+  // ------------------------ render: por rodada -----------------------------
+  function renderRodadas(container) {
+    var js = jogosFiltrados(false);
+    if (!js.length) {
+      container.appendChild(el('<div class="vazio"><div class="big">🔍</div>Nenhum jogo encontrado com esses filtros.</div>'));
+      return;
+    }
+    var porRodada = {};
+    js.forEach(function (j) { (porRodada[j.rodada] = porRodada[j.rodada] || []).push(j); });
+    Object.keys(porRodada).sort().forEach(function (r) {
+      var jogos = porRodada[r].slice().sort(function (a, b) {
+        return a.grupo < b.grupo ? -1 : a.grupo > b.grupo ? 1 : (a.data < b.data ? -1 : 1);
+      });
+      var feitos = jogos.filter(function (j) { return j.placar; }).length;
+      var rotulo = r + "ª Rodada  ·  " + feitos + "/" + jogos.length + " jogos disputados";
+      container.appendChild(el('<div class="dia-rotulo">' + esc(rotulo) + "</div>"));
+      var grade = el('<div class="grade-jogos"></div>');
+      jogos.forEach(function (j) { grade.appendChild(cardJogo(j)); });
       container.appendChild(grade);
     });
   }
@@ -355,9 +385,13 @@
   function render() {
     var main = $("#conteudo");
     main.innerHTML = "";
-    // barra de filtros só na aba de jogos
-    $("#barra-filtros").style.display = estado.aba === "jogos" ? "flex" : "none";
+    // filtros aparecem nas abas de jogos e por rodada; as situações só em "jogos"
+    var comFiltro = estado.aba === "jogos" || estado.aba === "rodadas";
+    $("#barra-filtros").style.display = comFiltro ? "flex" : "none";
+    var chips = $("#chips-status");
+    if (chips) chips.style.display = estado.aba === "jogos" ? "flex" : "none";
     if (estado.aba === "jogos") renderJogos(main);
+    else if (estado.aba === "rodadas") renderRodadas(main);
     else if (estado.aba === "grupos") renderGrupos(main);
     else if (estado.aba === "mata") renderMata(main);
     else renderSobre(main);
