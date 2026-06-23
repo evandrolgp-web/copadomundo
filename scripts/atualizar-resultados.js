@@ -1,18 +1,19 @@
 /* ===========================================================================
    atualizar-resultados.js
-   Busca os placares da Copa do Mundo 2026 numa API de futebol e atualiza o
-   CALENDARIO em assets/js/dados.js. Pensado para rodar no GitHub Actions.
+   Busca os jogos da Copa do Mundo 2026 numa API de futebol e atualiza:
+     • o CALENDARIO (placares da fase de grupos)
+     • o MATA_MATA_JOGOS (confrontos reais do mata-mata, com placares)
+   em assets/js/dados.js. Pensado para rodar no GitHub Actions.
 
    - Lê a chave em process.env.FOOTBALL_API_KEY (secret do repositório).
-   - API padrão: football-data.org (competição "WC"). Troque buscarPlacares()
-     se quiser usar outra API.
-   - À prova de falhas: sem chave / erro de rede / sem jogos finalizados =>
-     NÃO altera nada e encerra com sucesso (o site mantém os dados atuais).
-   - Só aplica placares de jogos FINALIZADOS (evita mostrar jogo em andamento
-     como encerrado).
+   - API padrão: football-data.org (competição "WC"). Troque buscarDados()
+     para usar outra API.
+   - À prova de falhas: sem chave / erro de rede / sem novidades => NÃO altera
+     nada e encerra com sucesso (o site mantém os dados atuais).
+   - Grupos: aplica só jogos FINALIZADOS. Mata-mata: registra o confronto
+     assim que as duas seleções são conhecidas (placar entra quando finaliza).
 
-   Modo de teste local (sem rede):
-     MOCK=1 node scripts/atualizar-resultados.js
+   Teste local (sem rede):  MOCK=1 node scripts/atualizar-resultados.js
    =========================================================================== */
 
 const fs = require("fs");
@@ -46,37 +47,65 @@ function codigo(nome) {
   return ALIAS[String(nome).toLowerCase().trim()] || null;
 }
 
-// ---- Camada de API (troque aqui para usar outra fonte) -------------------
-async function buscarPlacares(key) {
+// Estágio da API -> rótulo da fase (null = fase de grupos) -----------------
+function faseDe(stage) {
+  const s = (stage || "").toUpperCase();
+  if (s.includes("GROUP") || s.includes("LEAGUE")) return null;
+  if (s.includes("LAST_32") || s.includes("ROUND_OF_32")) return "32-avos de final";
+  if (s.includes("LAST_16") || s.includes("ROUND_OF_16")) return "Oitavas de final";
+  if (s.includes("QUARTER")) return "Quartas de final";
+  if (s.includes("SEMI")) return "Semifinais";
+  if (s.includes("THIRD") || s.includes("3RD")) return "Disputa de 3º lugar";
+  if (s.includes("FINAL")) return "Final";
+  return null;
+}
+
+// Normaliza a resposta da API em { grupo:[...], mata:[...] } ----------------
+function normalizar(matches) {
+  const grupo = [], mata = [];
+  matches.forEach(function (m) {
+    const a = codigo(m.homeTeam && m.homeTeam.name);
+    const b = codigo(m.awayTeam && m.awayTeam.name);
+    const ft = (m.score && m.score.fullTime) || {};
+    const fin = (m.status || "").toUpperCase() === "FINISHED" && ft.home != null && ft.away != null;
+    const fase = faseDe(m.stage);
+    if (fase === null) {
+      if (fin && a && b) grupo.push({ a: a, b: b, ga: ft.home, gb: ft.away });
+    } else if (a && b) {                       // mata-mata: confronto já definido
+      const data = (m.utcDate || "").slice(0, 10);
+      mata.push([fase, data, a, b, fin ? ft.home : null, fin ? ft.away : null]);
+    }
+  });
+  mata.sort(function (x, y) {
+    return (x[1] + x[2] + x[3]).localeCompare(y[1] + y[2] + y[3]);
+  });
+  return { grupo: grupo, mata: mata };
+}
+
+// Camada de API (troque aqui para usar outra fonte) -----------------------
+async function buscarDados(key) {
   const url = "https://api.football-data.org/v4/competitions/WC/matches";
   const resp = await fetch(url, { headers: { "X-Auth-Token": key } });
   if (!resp.ok) throw new Error("HTTP " + resp.status + " da API");
   const data = await resp.json();
-  const jogos = (data && data.matches) || [];
-  const out = [];
-  jogos.forEach(function (m) {
-    const st = (m.status || "").toUpperCase();
-    const ft = (m.score && m.score.fullTime) || {};
-    if (st !== "FINISHED" || ft.home == null || ft.away == null) return;
-    const a = codigo(m.homeTeam && m.homeTeam.name);
-    const b = codigo(m.awayTeam && m.awayTeam.name);
-    if (!a || !b) return;
-    out.push({ a: a, b: b, ga: ft.home, gb: ft.away });
-  });
-  return out;
+  return normalizar((data && data.matches) || []);
 }
 
-// Dados de teste (MOCK=1): finaliza os 4 jogos de hoje com placares fictícios
-function placaresMock() {
-  return [
-    { a: "POR", b: "UZB", ga: 3, gb: 1 },
-    { a: "COL", b: "COD", ga: 2, gb: 0 },
-    { a: "ENG", b: "GHA", ga: 2, gb: 1 },
-    { a: "PAN", b: "CRO", ga: 0, gb: 2 }
-  ];
+// Dados de teste (MOCK=1)
+function mock() {
+  return {
+    grupo: [
+      { a: "POR", b: "UZB", ga: 3, gb: 1 }, { a: "COL", b: "COD", ga: 2, gb: 0 },
+      { a: "ENG", b: "GHA", ga: 2, gb: 1 }, { a: "PAN", b: "CRO", ga: 0, gb: 2 }
+    ],
+    mata: [
+      ["32-avos de final", "2026-06-28", "BRA", "NOR", null, null],
+      ["Final", "2026-07-19", "ARG", "FRA", 2, 1]
+    ]
+  };
 }
 
-// Aplica os placares ao calendário (respeitando mando) --------------------
+// Aplica placares de grupo ao calendário (respeitando o mando) ------------
 function aplicar(calendario, placares) {
   const idx = {};
   calendario.forEach(function (e) { idx[[e[3], e[4]].sort().join("|")] = e; });
@@ -91,16 +120,25 @@ function aplicar(calendario, placares) {
   return n;
 }
 
-// Reescreve o bloco CALENDARIO e a data dos dados -------------------------
-function regravar(calendario) {
+// Reescreve os blocos CALENDARIO e MATA_MATA_JOGOS e a data ---------------
+function regravar(calendario, mata) {
   let txt = fs.readFileSync(ARQ, "utf8");
-  const linhas = calendario.map(function (e) { return "    " + JSON.stringify(e); }).join(",\n");
-  const bloco = "var CALENDARIO = [\n" + linhas + "\n  ];\n  // FIM_CALENDARIO";
-  txt = txt.replace(/var CALENDARIO = \[[\s\S]*?\/\/ FIM_CALENDARIO/, bloco);
+
+  const linhasC = calendario.map(function (e) { return "    " + JSON.stringify(e); }).join(",\n");
+  txt = txt.replace(/var CALENDARIO = \[[\s\S]*?\/\/ FIM_CALENDARIO/,
+    "var CALENDARIO = [\n" + linhasC + "\n  ];\n  // FIM_CALENDARIO");
+
+  const corpoM = mata.length
+    ? "\n" + mata.map(function (e) { return "    " + JSON.stringify(e); }).join(",\n") + "\n  "
+    : "\n  ";
+  txt = txt.replace(/var MATA_MATA_JOGOS = \[[\s\S]*?\/\/ FIM_MATA_JOGOS/,
+    "var MATA_MATA_JOGOS = [" + corpoM + "];\n  // FIM_MATA_JOGOS");
+
   const d = new Date();
   const dataBR = String(d.getUTCDate()).padStart(2, "0") + "/" +
                  String(d.getUTCMonth() + 1).padStart(2, "0") + "/" + d.getUTCFullYear();
   txt = txt.replace(/dataDados:\s*"[^"]*"/, 'dataDados: "' + dataBR + '"');
+
   fs.writeFileSync(ARQ, txt);
 }
 
@@ -112,15 +150,19 @@ function regravar(calendario) {
       console.log("Sem FOOTBALL_API_KEY definido — nada a atualizar. Encerrando.");
       return;
     }
-    const placares = usarMock ? placaresMock() : await buscarPlacares(key);
-    console.log("Placares finalizados recebidos: " + placares.length);
+    const dados = usarMock ? mock() : await buscarDados(key);
+    console.log("Grupo finalizados: " + dados.grupo.length + " | Mata-mata definidos: " + dados.mata.length);
 
     const calendario = D.CALENDARIO.map(function (e) { return e.slice(); });
-    const mudancas = aplicar(calendario, placares);
-    if (!mudancas) { console.log("Nenhum placar novo para aplicar."); return; }
+    const nGrupo = aplicar(calendario, dados.grupo);
+    const mataAtual = D.MATA_MATA_JOGOS || [];
+    const mataMudou = JSON.stringify(dados.mata) !== JSON.stringify(mataAtual);
 
-    regravar(calendario);
-    console.log("✅ " + mudancas + " jogo(s) atualizado(s) em dados.js.");
+    if (!nGrupo && !mataMudou) { console.log("Nenhuma novidade para aplicar."); return; }
+
+    regravar(calendario, mataMudou ? dados.mata : mataAtual);
+    console.log("✅ Atualizado — grupos: " + nGrupo + " placar(es); mata-mata: " +
+      (mataMudou ? dados.mata.length + " confronto(s)" : "sem mudança") + ".");
   } catch (e) {
     console.log("Não foi possível atualizar agora: " + e.message + " (dados mantidos).");
     // sai com sucesso para não falhar o workflow

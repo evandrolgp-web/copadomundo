@@ -450,8 +450,18 @@
     { fase: "FINAL", data: "2026-07-19", m: ["Finalistas", ""] }
   ];
 
+  /* -------------------------------------------------------------------------
+     Jogos REAIS do mata-mata, preenchidos automaticamente pela atualização
+     assim que os confrontos forem definidos (a partir de 28/06).
+     Formato: [fase, data, mandante, visitante, golsMandante, golsVisitante]
+     Enquanto vazio, a aba Mata-mata mostra o chaveamento (MATA_MATA acima).
+     ------------------------------------------------------------------------- */
+  var MATA_MATA_JOGOS = [
+  ];
+  // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
+
   // Exporta tanto para browser quanto para Node (testes) ------------------
-  var DADOS = { TORNEIO: TORNEIO, CIDADES: CIDADES, SELECOES: SELECOES, GRUPOS: GRUPOS, CALENDARIO: CALENDARIO, MATA_MATA: MATA_MATA };
+  var DADOS = { TORNEIO: TORNEIO, CIDADES: CIDADES, SELECOES: SELECOES, GRUPOS: GRUPOS, CALENDARIO: CALENDARIO, MATA_MATA: MATA_MATA, MATA_MATA_JOGOS: MATA_MATA_JOGOS };
   raiz.COPA_DADOS = DADOS;
   if (typeof module !== "undefined" && module.exports) module.exports = DADOS;
 

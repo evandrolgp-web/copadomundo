@@ -345,10 +345,39 @@ footer.rodape a { color: var(--txt-mute); }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* --------------------- Por rodada (visão compacta) ---------------------- */
+.rodada-sec { margin-top: 26px; }
+.rodada-cab {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 14px; margin-bottom: 12px;
+  background: linear-gradient(90deg, var(--gold-soft), transparent);
+  border-left: 4px solid var(--gold); border-radius: 8px;
+}
+.rodada-cab b { font-size: 16px; letter-spacing: .3px; }
+.rodada-cab .cont { font-size: 12px; color: var(--txt-mute); font-weight: 600; white-space: nowrap; }
+.grupos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 12px; }
+.gb { background: var(--card); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.gb-cab {
+  padding: 7px 12px; background: var(--card-2); border-bottom: 1px solid var(--line);
+  font-size: 11px; font-weight: 700; letter-spacing: .5px; color: var(--txt-mute); text-transform: uppercase;
+}
+.linha-jogo {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px;
+  padding: 9px 12px; cursor: pointer; border-bottom: 1px solid var(--line); transition: background .12s;
+}
+.linha-jogo:last-child { border-bottom: none; }
+.linha-jogo:hover { background: var(--green-soft); }
+.lj-time { display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 13.5px; font-weight: 600; }
+.lj-time .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lj-time.dir { flex-direction: row-reverse; text-align: right; }
+.lj-mid { min-width: 50px; text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; }
+.lj-mid.fut { font-size: 11px; font-weight: 700; color: var(--txt-dim); letter-spacing: 0; }
+
 @media (max-width: 640px) {
   .brand h1 { font-size: 16px; }
   .hero h2 { font-size: 21px; }
   .grade-jogos { grid-template-columns: 1fr; }
+  .grupos-grid { grid-template-columns: 1fr; }
   .modal-confronto { padding: 16px 12px; }
   .modal-time .flag { font-size: 40px; }
 }

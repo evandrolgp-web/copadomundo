@@ -15,6 +15,7 @@
   // Estado da UI
   var estado = { aba: "jogos", busca: "", grupo: "todos", status: "proximos" };
   var JOGOS = [];        // jogos da fase de grupos (analisáveis)
+  var JOGOS_MATA = [];   // jogos REAIS do mata-mata (quando definidos)
   var MOMENTO = {};      // momento (forma) por seleção, vindo dos resultados
 
   // ----------------------------- utilidades --------------------------------
@@ -56,6 +57,27 @@
       };
     });
     lista.sort(function (a, b) { return a.data < b.data ? -1 : a.data > b.data ? 1 : (a.grupo < b.grupo ? -1 : 1); });
+    return lista;
+  }
+
+  // Jogos reais do mata-mata (preenchidos pela atualização automática) ------
+  // Formato em D.MATA_MATA_JOGOS: [fase, data, casa, fora, golsCasa, golsFora]
+  function gerarJogosMata() {
+    var lista = (D.MATA_MATA_JOGOS || []).filter(function (c) {
+      return D.SELECOES[c[2]] && D.SELECOES[c[3]];   // só confrontos já definidos
+    }).map(function (c, i) {
+      var pc = c[4], pf = c[5];
+      return {
+        id: "M-" + i + "-" + c[2] + c[3],
+        fase: c[0],
+        grupo: null, rodada: null,
+        data: c[1],
+        local: "",
+        casa: c[2], fora: c[3],
+        placar: (pc == null || pf == null) ? null : [pc, pf]
+      };
+    });
+    lista.sort(function (a, b) { return a.data < b.data ? -1 : a.data > b.data ? 1 : 0; });
     return lista;
   }
 
@@ -118,10 +140,12 @@
       : st === "encerrado" ? '<span class="pill encerrado">ENCERRADO</span>'
       : '<span class="pill agendado">AGENDADO</span>';
 
+    var topoLabel = j.grupo ? ("Grupo " + j.grupo + " · " + j.rodada + "ª rod.") : esc(j.fase);
+
     return el(
       '<div class="jogo" data-id="' + j.id + '">' +
         '<div class="jogo-topo">' +
-          '<span class="jogo-grupo">Grupo ' + j.grupo + " · " + j.rodada + "ª rod.</span>" +
+          '<span class="jogo-grupo">' + topoLabel + "</span>" +
           pill +
         "</div>" +
         '<div class="confronto">' +
@@ -160,6 +184,26 @@
   }
 
   // ------------------------ render: por rodada -----------------------------
+  function diaCurto(iso) { var p = iso.split("-"); return p[2] + "/" + p[1]; }
+
+  // Linha compacta de jogo (usada na aba "Por rodada")
+  function linhaJogo(j) {
+    var ca = D.SELECOES[j.casa], fo = D.SELECOES[j.fora];
+    var st = statusDoJogo(j);
+    var mid = j.placar
+      ? '<span class="lj-mid">' + j.placar[0] + "-" + j.placar[1] + "</span>"
+      : (st === "hoje"
+        ? '<span class="lj-mid fut" style="color:var(--gold)">HOJE</span>'
+        : '<span class="lj-mid fut">' + diaCurto(j.data) + "</span>");
+    return el(
+      '<div class="linha-jogo" data-id="' + j.id + '">' +
+        '<span class="lj-time"><span class="flag-sm">' + ca.flag + '</span><span class="nm">' + esc(ca.nome) + "</span></span>" +
+        mid +
+        '<span class="lj-time dir"><span class="flag-sm">' + fo.flag + '</span><span class="nm">' + esc(fo.nome) + "</span></span>" +
+      "</div>"
+    );
+  }
+
   function renderRodadas(container) {
     var js = jogosFiltrados(false);
     if (!js.length) {
@@ -169,15 +213,23 @@
     var porRodada = {};
     js.forEach(function (j) { (porRodada[j.rodada] = porRodada[j.rodada] || []).push(j); });
     Object.keys(porRodada).sort().forEach(function (r) {
-      var jogos = porRodada[r].slice().sort(function (a, b) {
-        return a.grupo < b.grupo ? -1 : a.grupo > b.grupo ? 1 : (a.data < b.data ? -1 : 1);
-      });
+      var jogos = porRodada[r];
       var feitos = jogos.filter(function (j) { return j.placar; }).length;
-      var rotulo = r + "ª Rodada  ·  " + feitos + "/" + jogos.length + " jogos disputados";
-      container.appendChild(el('<div class="dia-rotulo">' + esc(rotulo) + "</div>"));
-      var grade = el('<div class="grade-jogos"></div>');
-      jogos.forEach(function (j) { grade.appendChild(cardJogo(j)); });
-      container.appendChild(grade);
+      var sec = el('<div class="rodada-sec"></div>');
+      sec.appendChild(el(
+        '<div class="rodada-cab"><b>' + r + 'ª Rodada</b><span class="cont">' + feitos + " / " + jogos.length + " disputados</span></div>"
+      ));
+      // organiza por grupo (cada bloco = 1 grupo com seus 2 jogos)
+      var porGrupo = {};
+      jogos.forEach(function (j) { (porGrupo[j.grupo] = porGrupo[j.grupo] || []).push(j); });
+      var grid = el('<div class="grupos-grid"></div>');
+      Object.keys(porGrupo).sort().forEach(function (g) {
+        var gb = el('<div class="gb"><div class="gb-cab">Grupo ' + g + "</div></div>");
+        porGrupo[g].forEach(function (j) { gb.appendChild(linhaJogo(j)); });
+        grid.appendChild(gb);
+      });
+      sec.appendChild(grid);
+      container.appendChild(sec);
     });
   }
 
@@ -232,7 +284,22 @@
 
   // -------------------------- render: mata-mata ----------------------------
   function renderMata(container) {
-    container.appendChild(el('<p style="color:var(--txt-mute);font-size:13px;margin:0 0 14px">Chaveamento do mata-mata (a partir de 28/jun). Os confrontos exatos dependem da classificação final dos grupos — formato inédito de 48 seleções, com 32-avos de final.</p>'));
+    // Quando os confrontos reais já existem, mostra-os COM análise (clicáveis)
+    if (JOGOS_MATA.length) {
+      container.appendChild(el('<p style="color:var(--txt-mute);font-size:13px;margin:0 0 14px">Confrontos reais do mata-mata — clique em um jogo para ver a análise e o provável vencedor. Atualizados automaticamente conforme o chaveamento avança.</p>'));
+      var porFaseR = {};
+      JOGOS_MATA.forEach(function (j) { (porFaseR[j.fase] = porFaseR[j.fase] || []).push(j); });
+      Object.keys(porFaseR).forEach(function (fase) {
+        var qtd = porFaseR[fase].length;
+        container.appendChild(el('<div class="dia-rotulo">' + esc(fase) + " <span style='color:var(--txt-dim);font-weight:500;font-size:11px'>" + qtd + " jogo" + (qtd > 1 ? "s" : "") + "</span></div>"));
+        var grade = el('<div class="grade-jogos"></div>');
+        porFaseR[fase].forEach(function (j) { grade.appendChild(cardJogo(j)); });
+        container.appendChild(grade);
+      });
+      return;
+    }
+    // Antes da definição dos confrontos: mostra o chaveamento (placeholders)
+    container.appendChild(el('<p style="color:var(--txt-mute);font-size:13px;margin:0 0 14px">Chaveamento do mata-mata (a partir de 28/jun). Os confrontos dependem da classificação final dos grupos — formato inédito de 48 seleções, com 32-avos de final. <b>Assim que os confrontos forem definidos, cada jogo aparecerá aqui com análise e provável vencedor automaticamente.</b></p>'));
     var porFase = {};
     D.MATA_MATA.forEach(function (m) { (porFase[m.fase] = porFase[m.fase] || []).push(m); });
     Object.keys(porFase).forEach(function (fase) {
@@ -282,7 +349,8 @@
 
   // ------------------------------- MODAL -----------------------------------
   function abrirModal(jogoId) {
-    var j = JOGOS.find(function (x) { return x.id === jogoId; });
+    var acha = function (x) { return x.id === jogoId; };
+    var j = JOGOS.find(acha) || JOGOS_MATA.find(acha);
     if (!j) return;
     var ca = D.SELECOES[j.casa], fo = D.SELECOES[j.fora];
     var p = A.prever(ca, fo, ctxJogo(j));
@@ -317,7 +385,7 @@
     var modal = el(
       '<div class="modal" role="dialog" aria-modal="true">' +
         '<div class="modal-head">' +
-          "<div class='meta'><b>Grupo " + j.grupo + "</b> · " + j.rodada + "ª rodada<br>" + esc(fmtData(j.data)) + " · " + esc(j.local) + "</div>" +
+          "<div class='meta'>" + (j.grupo ? "<b>Grupo " + j.grupo + "</b> · " + j.rodada + "ª rodada" : "<b>" + esc(j.fase) + "</b>") + "<br>" + esc(fmtData(j.data)) + (j.local ? " · " + esc(j.local) : "") + "</div>" +
           '<button class="fechar" aria-label="Fechar">×</button>' +
         "</div>" +
         '<div class="modal-confronto">' +
@@ -395,8 +463,8 @@
     else if (estado.aba === "grupos") renderGrupos(main);
     else if (estado.aba === "mata") renderMata(main);
     else renderSobre(main);
-    // delegação de clique nos cards
-    main.querySelectorAll(".jogo[data-id]").forEach(function (c) {
+    // delegação de clique (cards e linhas compactas)
+    main.querySelectorAll("[data-id]").forEach(function (c) {
       c.addEventListener("click", function () { abrirModal(c.getAttribute("data-id")); });
     });
   }
@@ -404,6 +472,7 @@
   // ------------------------------- init ------------------------------------
   function init() {
     JOGOS = gerarJogos();
+    JOGOS_MATA = gerarJogosMata();
     calcularMomento();
 
     // selo de data (reflete a atualização automática dos resultados)

@@ -57,6 +57,7 @@ atualiza o arquivo e republica o site sozinho — **sem backend**.
 
 Detalhes:
 - Só aplica placares de jogos **finalizados** (não marca jogo em andamento como encerrado).
+- Também traz automaticamente os **confrontos do mata-mata** assim que são definidos — cada um ganha análise e provável vencedor na hora (o motor já cobre as 48 seleções).
 - À prova de falhas: sem chave / erro de rede / sem novidades ⇒ **não altera nada** (o site mantém os dados atuais).
 - Atualização "quase em tempo real" (atraso de minutos; o GitHub pode atrasar agendamentos).
 - Para usar **outra API**, edite a função `buscarPlacares()` em `scripts/atualizar-resultados.js`.
