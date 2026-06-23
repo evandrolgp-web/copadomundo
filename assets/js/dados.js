@@ -363,37 +363,61 @@
   };
 
   /* -------------------------------------------------------------------------
-     Datas das rodadas por grupo (escalonadas em 11–27/jun). Indicativas.
+     CALENDÁRIO real da fase de grupos (pesquisa na internet em 23/06/2026).
+     Formato: [grupo, rodada, data, mandante, visitante, golsMandante, golsVisitante]
+     Placar null = jogo ainda não disputado (jogos de 23/06 estão em andamento).
+     44 jogos já disputados (rodadas 1 e 2; grupos K e L só a rodada 1).
      ------------------------------------------------------------------------- */
-  var CRONOGRAMA = {
-    A: ["2026-06-11", "2026-06-16", "2026-06-22"],
-    B: ["2026-06-11", "2026-06-16", "2026-06-22"],
-    C: ["2026-06-12", "2026-06-17", "2026-06-23"],
-    D: ["2026-06-12", "2026-06-17", "2026-06-23"],
-    E: ["2026-06-13", "2026-06-18", "2026-06-24"],
-    F: ["2026-06-13", "2026-06-18", "2026-06-24"],
-    G: ["2026-06-14", "2026-06-19", "2026-06-25"],
-    H: ["2026-06-14", "2026-06-19", "2026-06-25"],
-    I: ["2026-06-15", "2026-06-20", "2026-06-26"],
-    J: ["2026-06-15", "2026-06-20", "2026-06-26"],
-    K: ["2026-06-13", "2026-06-18", "2026-06-23"],
-    L: ["2026-06-13", "2026-06-18", "2026-06-23"]
-  };
-
-  /* -------------------------------------------------------------------------
-     RESULTADOS confirmados (pesquisa em 23/06). Chave: "CASA-FORA".
-     O gerador aplica o placar tentando as duas ordens.
-     ------------------------------------------------------------------------- */
-  var RESULTADOS = {
-    "CAN-QAT": "6-0",
-    "FRA-SEN": "3-1",
-    "FRA-IRQ": "3-0",
-    "ESP-KSA": "4-0",
-    "ENG-CRO": "4-2",
-    "POR-COD": "1-1",
-    "UZB-COL": "1-3",
-    "GHA-PAN": "1-0"
-  };
+  var CALENDARIO = [
+    // Grupo A
+    ["A", 1, "2026-06-11", "MEX", "RSA", 2, 0], ["A", 1, "2026-06-11", "KOR", "CZE", 2, 1],
+    ["A", 2, "2026-06-18", "CZE", "RSA", 1, 1], ["A", 2, "2026-06-18", "MEX", "KOR", 1, 0],
+    ["A", 3, "2026-06-24", "CZE", "MEX", null, null], ["A", 3, "2026-06-24", "RSA", "KOR", null, null],
+    // Grupo B
+    ["B", 1, "2026-06-12", "CAN", "BIH", 1, 1], ["B", 1, "2026-06-13", "SUI", "QAT", 1, 1],
+    ["B", 2, "2026-06-18", "SUI", "BIH", 4, 1], ["B", 2, "2026-06-18", "CAN", "QAT", 6, 0],
+    ["B", 3, "2026-06-24", "SUI", "CAN", null, null], ["B", 3, "2026-06-24", "BIH", "QAT", null, null],
+    // Grupo C
+    ["C", 1, "2026-06-13", "BRA", "MAR", 1, 1], ["C", 1, "2026-06-13", "SCO", "HAI", 1, 0],
+    ["C", 2, "2026-06-19", "MAR", "SCO", 1, 0], ["C", 2, "2026-06-19", "BRA", "HAI", 3, 0],
+    ["C", 3, "2026-06-24", "SCO", "BRA", null, null], ["C", 3, "2026-06-24", "MAR", "HAI", null, null],
+    // Grupo D
+    ["D", 1, "2026-06-12", "USA", "PAR", 4, 1], ["D", 1, "2026-06-13", "AUS", "TUR", 2, 0],
+    ["D", 2, "2026-06-19", "USA", "AUS", 2, 0], ["D", 2, "2026-06-19", "PAR", "TUR", 1, 0],
+    ["D", 3, "2026-06-24", "USA", "TUR", null, null], ["D", 3, "2026-06-24", "PAR", "AUS", null, null],
+    // Grupo E
+    ["E", 1, "2026-06-14", "GER", "CUW", 7, 1], ["E", 1, "2026-06-14", "CIV", "ECU", 1, 0],
+    ["E", 2, "2026-06-20", "GER", "CIV", 2, 1], ["E", 2, "2026-06-20", "ECU", "CUW", 0, 0],
+    ["E", 3, "2026-06-25", "CUW", "CIV", null, null], ["E", 3, "2026-06-25", "ECU", "GER", null, null],
+    // Grupo F
+    ["F", 1, "2026-06-14", "NED", "JPN", 2, 2], ["F", 1, "2026-06-14", "SWE", "TUN", 5, 1],
+    ["F", 2, "2026-06-20", "NED", "SWE", 5, 1], ["F", 2, "2026-06-20", "JPN", "TUN", 4, 0],
+    ["F", 3, "2026-06-25", "JPN", "SWE", null, null], ["F", 3, "2026-06-25", "TUN", "NED", null, null],
+    // Grupo G
+    ["G", 1, "2026-06-15", "BEL", "EGY", 1, 1], ["G", 1, "2026-06-15", "IRN", "NZL", 2, 2],
+    ["G", 2, "2026-06-21", "BEL", "IRN", 0, 0], ["G", 2, "2026-06-21", "EGY", "NZL", 3, 1],
+    ["G", 3, "2026-06-26", "EGY", "IRN", null, null], ["G", 3, "2026-06-26", "NZL", "BEL", null, null],
+    // Grupo H
+    ["H", 1, "2026-06-15", "ESP", "CPV", 0, 0], ["H", 1, "2026-06-15", "KSA", "URU", 1, 1],
+    ["H", 2, "2026-06-21", "ESP", "KSA", 4, 0], ["H", 2, "2026-06-21", "URU", "CPV", 2, 2],
+    ["H", 3, "2026-06-26", "CPV", "KSA", null, null], ["H", 3, "2026-06-26", "URU", "ESP", null, null],
+    // Grupo I
+    ["I", 1, "2026-06-16", "FRA", "SEN", 3, 1], ["I", 1, "2026-06-16", "NOR", "IRQ", 4, 1],
+    ["I", 2, "2026-06-22", "FRA", "IRQ", 3, 0], ["I", 2, "2026-06-22", "NOR", "SEN", 3, 2],
+    ["I", 3, "2026-06-26", "FRA", "NOR", null, null], ["I", 3, "2026-06-26", "SEN", "IRQ", null, null],
+    // Grupo J
+    ["J", 1, "2026-06-16", "ARG", "ALG", 3, 0], ["J", 1, "2026-06-16", "AUT", "JOR", 3, 1],
+    ["J", 2, "2026-06-22", "ARG", "AUT", 2, 0], ["J", 2, "2026-06-22", "ALG", "JOR", 2, 1],
+    ["J", 3, "2026-06-27", "JOR", "ARG", null, null], ["J", 3, "2026-06-27", "ALG", "AUT", null, null],
+    // Grupo K (rodada 2 em andamento hoje, 23/06)
+    ["K", 1, "2026-06-17", "POR", "COD", 1, 1], ["K", 1, "2026-06-18", "COL", "UZB", 3, 1],
+    ["K", 2, "2026-06-23", "POR", "UZB", null, null], ["K", 2, "2026-06-23", "COL", "COD", null, null],
+    ["K", 3, "2026-06-27", "POR", "COL", null, null], ["K", 3, "2026-06-27", "COD", "UZB", null, null],
+    // Grupo L (rodada 2 em andamento hoje, 23/06)
+    ["L", 1, "2026-06-17", "ENG", "CRO", 4, 2], ["L", 1, "2026-06-17", "GHA", "PAN", 1, 0],
+    ["L", 2, "2026-06-23", "ENG", "GHA", null, null], ["L", 2, "2026-06-23", "PAN", "CRO", null, null],
+    ["L", 3, "2026-06-27", "PAN", "ENG", null, null], ["L", 3, "2026-06-27", "CRO", "GHA", null, null]
+  ];
 
   /* -------------------------------------------------------------------------
      Estrutura do mata-mata (chaveamento oficial do formato de 48 seleções).
@@ -426,7 +450,7 @@
   ];
 
   // Exporta tanto para browser quanto para Node (testes) ------------------
-  var DADOS = { TORNEIO: TORNEIO, CIDADES: CIDADES, SELECOES: SELECOES, GRUPOS: GRUPOS, CRONOGRAMA: CRONOGRAMA, RESULTADOS: RESULTADOS, MATA_MATA: MATA_MATA };
+  var DADOS = { TORNEIO: TORNEIO, CIDADES: CIDADES, SELECOES: SELECOES, GRUPOS: GRUPOS, CALENDARIO: CALENDARIO, MATA_MATA: MATA_MATA };
   raiz.COPA_DADOS = DADOS;
   if (typeof module !== "undefined" && module.exports) module.exports = DADOS;
 

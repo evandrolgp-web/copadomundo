@@ -39,43 +39,21 @@
     return "agendado";
   }
 
-  // ------------------- geração automática dos jogos ------------------------
-  // Ordem de confrontos do rodízio (posições 0..3 dentro do grupo)
-  var RODIZIO = [
-    [[0, 1], [2, 3]], // rodada 1
-    [[0, 2], [3, 1]], // rodada 2
-    [[0, 3], [1, 2]]  // rodada 3
-  ];
-
-  function lerResultado(casa, fora) {
-    var r = D.RESULTADOS[casa + "-" + fora];
-    if (r) return r.split("-").map(Number);
-    var inv = D.RESULTADOS[fora + "-" + casa];
-    if (inv) { var x = inv.split("-").map(Number); return [x[1], x[0]]; }
-    return null;
-  }
-
+  // ------------ montagem dos jogos a partir do calendário real -------------
+  // A tabela é preenchida automaticamente a partir de D.CALENDARIO.
   function gerarJogos() {
-    var lista = [];
-    var cidadeIdx = 0;
-    Object.keys(D.GRUPOS).forEach(function (g) {
-      var times = D.GRUPOS[g];
-      RODIZIO.forEach(function (rodada, ri) {
-        rodada.forEach(function (par) {
-          var casa = times[par[0]], fora = times[par[1]];
-          var placar = lerResultado(casa, fora);
-          lista.push({
-            id: "G" + g + "-" + (ri + 1) + "-" + par[0] + par[1],
-            fase: "Fase de Grupos",
-            grupo: g,
-            rodada: ri + 1,
-            data: D.CRONOGRAMA[g][ri],
-            local: D.CIDADES[cidadeIdx++ % D.CIDADES.length],
-            casa: casa, fora: fora,
-            placar: placar
-          });
-        });
-      });
+    var lista = D.CALENDARIO.map(function (c, i) {
+      var pc = c[5], pf = c[6];
+      return {
+        id: "G" + c[0] + "-" + c[1] + "-" + c[3] + c[4],
+        fase: "Fase de Grupos",
+        grupo: c[0],
+        rodada: c[1],
+        data: c[2],
+        local: D.CIDADES[i % D.CIDADES.length],
+        casa: c[3], fora: c[4],
+        placar: (pc == null || pf == null) ? null : [pc, pf]
+      };
     });
     lista.sort(function (a, b) { return a.data < b.data ? -1 : a.data > b.data ? 1 : (a.grupo < b.grupo ? -1 : 1); });
     return lista;
@@ -258,7 +236,7 @@
         "<p style='color:var(--txt-mute);font-size:14px;line-height:1.7'>" +
         "Cada seleção tem um perfil construído a partir de <b>pesquisa na internet</b> (forma de jogar, formação, destaques, desfalques por lesão/suspensão, momento e força estimada). " +
         "O motor de análise combina esses fatores — qualidade individual, momento na competição, fator casa, desfalques e tradição em Copas — para estimar as probabilidades de vitória, empate e derrota, o placar mais provável e o <b>provável vencedor</b>, sempre explicando o porquê.</p>" +
-        "<p style='color:var(--txt-mute);font-size:14px;line-height:1.7'>A tabela de 72 jogos da fase de grupos é <b>gerada automaticamente</b> a partir da composição dos 12 grupos. Resultados confirmados até " + esc(D.TORNEIO.dataDados) + " já estão aplicados; use o botão <b>Atualizar ao vivo</b> para tentar buscar placares mais recentes.</p>" +
+        "<p style='color:var(--txt-mute);font-size:14px;line-height:1.7'>A tabela de 72 jogos da fase de grupos é <b>gerada automaticamente</b> a partir do calendário. Os <b>44 jogos já disputados</b> até " + esc(D.TORNEIO.dataDados) + " exibem o placar real (pesquisado na internet); os jogos de hoje e os futuros mostram a previsão da análise.</p>" +
         "<h4 style='color:var(--gold);margin-bottom:8px'>Fontes da pesquisa</h4>" +
         '<div class="fontes" style="font-size:13px">' +
           '<a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026" target="_blank" rel="noopener">FIFA</a>' +
@@ -362,64 +340,9 @@
     document.body.style.overflow = "";
   }
 
-  // ----------------------- busca de resultados ao vivo ---------------------
-  // Aliases (inglês) para casar nomes vindos da API com nossos códigos
-  var ALIAS = {
-    "mexico": "MEX", "south africa": "RSA", "south korea": "KOR", "korea republic": "KOR", "czechia": "CZE", "czech republic": "CZE",
-    "switzerland": "SUI", "bosnia and herzegovina": "BIH", "qatar": "QAT", "canada": "CAN",
-    "brazil": "BRA", "morocco": "MAR", "scotland": "SCO", "haiti": "HAI",
-    "united states": "USA", "usa": "USA", "paraguay": "PAR", "australia": "AUS", "turkey": "TUR", "türkiye": "TUR", "turkiye": "TUR",
-    "germany": "GER", "ivory coast": "CIV", "cote d'ivoire": "CIV", "côte d'ivoire": "CIV", "ecuador": "ECU", "curacao": "CUW", "curaçao": "CUW",
-    "netherlands": "NED", "japan": "JPN", "sweden": "SWE", "tunisia": "TUN",
-    "belgium": "BEL", "egypt": "EGY", "iran": "IRN", "ir iran": "IRN", "new zealand": "NZL",
-    "spain": "ESP", "uruguay": "URU", "saudi arabia": "KSA", "cape verde": "CPV", "cabo verde": "CPV",
-    "france": "FRA", "norway": "NOR", "senegal": "SEN", "iraq": "IRQ",
-    "argentina": "ARG", "austria": "AUT", "algeria": "ALG", "jordan": "JOR",
-    "portugal": "POR", "colombia": "COL", "dr congo": "COD", "congo dr": "COD", "uzbekistan": "UZB",
-    "england": "ENG", "croatia": "CRO", "ghana": "GHA", "panama": "PAN"
-  };
-  function codigoDe(nome) {
-    if (!nome) return null;
-    var k = nome.toLowerCase().trim();
-    return ALIAS[k] || null;
-  }
-
-  function buscarAoVivo(botao) {
-    botao.disabled = true; botao.textContent = "Buscando…";
-    var KEY = "3"; // chave de teste pública da TheSportsDB
-    var base = "https://www.thesportsdb.com/api/v1/json/" + KEY + "/";
-
-    fetch(base + "all_leagues.php")
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        var ligas = (d && d.leagues) || [];
-        var liga = ligas.find(function (l) {
-          return /world cup/i.test(l.strLeague || "") && /soccer/i.test(l.strSport || "") &&
-                 !/women|u-?\d|qualif/i.test(l.strLeague || "");
-        });
-        if (!liga) throw new Error("liga não encontrada");
-        return fetch(base + "eventsseason.php?id=" + liga.idLeague + "&s=2026");
-      })
-      .then(function (r) { return r.json(); })
-      .then(function (d) {
-        var eventos = (d && d.events) || [];
-        var aplicados = 0;
-        eventos.forEach(function (ev) {
-          if (ev.intHomeScore == null || ev.intAwayScore == null) return;
-          var ch = codigoDe(ev.strHomeTeam), cf = codigoDe(ev.strAwayTeam);
-          if (!ch || !cf) return;
-          D.RESULTADOS[ch + "-" + cf] = ev.intHomeScore + "-" + ev.intAwayScore;
-          aplicados++;
-        });
-        if (!aplicados) throw new Error("sem placares aplicáveis");
-        JOGOS = gerarJogos(); calcularMomento(); render();
-        toast("✅ " + aplicados + " resultados atualizados ao vivo!");
-      })
-      .catch(function () {
-        toast("Não foi possível atualizar agora — exibindo dados de " + D.TORNEIO.dataDados + ".");
-      })
-      .then(function () { botao.disabled = false; botao.textContent = "🔄 Atualizar ao vivo"; });
-  }
+  // Observação: a atualização "ao vivo" foi removida — não há API pública
+  // gratuita e com CORS confiável para os placares da Copa 2026. Os resultados
+  // são mantidos diretamente em dados.js (CALENDARIO), via pesquisa na internet.
 
   // ------------------------------- toast -----------------------------------
   var toastTimer;
@@ -478,9 +401,6 @@
         render();
       });
     });
-
-    // atualizar ao vivo
-    $("#btn-atualizar").addEventListener("click", function () { buscarAoVivo(this); });
 
     // fechar modal
     $("#overlay").addEventListener("click", function (e) { if (e.target.id === "overlay") fecharModal(); });
