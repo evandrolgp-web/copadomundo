@@ -150,6 +150,13 @@ function regravar(calendario, mata) {
       console.log("Sem FOOTBALL_API_KEY definido — nada a atualizar. Encerrando.");
       return;
     }
+    // Janela de jogos (UTC 15h–05h ≈ 12h–02h BRT). Fora dela não há jogos,
+    // então nem chamamos a API (economiza cota). MOCK ignora a janela.
+    var h = new Date().getUTCHours();
+    if (!usarMock && !(h >= 15 || h <= 5)) {
+      console.log("Fora da janela de jogos (UTC " + h + "h) — nada a fazer.");
+      return;
+    }
     const dados = usarMock ? mock() : await buscarDados(key);
     console.log("Grupo finalizados: " + dados.grupo.length + " | Mata-mata definidos: " + dados.mata.length);
 

@@ -5,7 +5,9 @@ name: Atualizar resultados
 # Requer o secret FOOTBALL_API_KEY (ver README).
 on:
   schedule:
-    - cron: "*/15 * * 6,7 *"
+    # Backup do gatilho externo. Só na janela de jogos (UTC 15h–05h ≈ 12h–02h BRT).
+    - cron: "*/15 15-23 * 6,7 *"
+    - cron: "*/15 0-5 * 6,7 *"
   workflow_dispatch:
 
 permissions:

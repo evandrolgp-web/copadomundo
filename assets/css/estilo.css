@@ -373,11 +373,29 @@ footer.rodape a { color: var(--txt-mute); }
 .lj-mid { min-width: 50px; text-align: center; font-size: 15px; font-weight: 800; letter-spacing: .5px; }
 .lj-mid.fut { font-size: 11px; font-weight: 700; color: var(--txt-dim); letter-spacing: 0; }
 
+/* ------------------- Painel de desempenho dos palpites ------------------ */
+.placar-stats { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 22px; }
+.placar-stats h3 {
+  margin: 0 0 12px; font-size: 13px; text-transform: uppercase; letter-spacing: .5px;
+  color: var(--txt-mute); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.placar-stats h3 .aprov { color: var(--gold); font-weight: 800; font-size: 13px; }
+.ps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.ps-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--bg-2); border: 1px solid var(--line); }
+.ps-ico { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; flex-shrink: 0; }
+.ps-item.exato .ps-ico { background: var(--green-soft); color: #6ee7a0; }
+.ps-item.resultado .ps-ico { background: rgba(59, 130, 246, .16); color: #8ab4ff; }
+.ps-item.erro .ps-ico { background: rgba(239, 68, 68, .16); color: #ff9b9b; }
+.ps-lbl { font-weight: 600; font-size: 14px; }
+.ps-num { font-size: 12px; color: var(--txt-mute); margin-top: 2px; }
+.ps-rodape { font-size: 11px; color: var(--txt-dim); margin-top: 10px; }
+
 @media (max-width: 640px) {
   .brand h1 { font-size: 16px; }
   .hero h2 { font-size: 21px; }
   .grade-jogos { grid-template-columns: 1fr; }
   .grupos-grid { grid-template-columns: 1fr; }
+  .ps-grid { grid-template-columns: 1fr; }
   .modal-confronto { padding: 16px 12px; }
   .modal-time .flag { font-size: 40px; }
 }

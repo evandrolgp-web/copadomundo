@@ -174,7 +174,41 @@
     );
   }
 
+  // Painel de desempenho: compara a previsão com os jogos já encerrados
+  function painelAcertos() {
+    var exato = 0, resultado = 0, incorreto = 0;
+    JOGOS.concat(JOGOS_MATA).forEach(function (j) {
+      if (!j.placar) return;
+      var p = A.prever(D.SELECOES[j.casa], D.SELECOES[j.fora], ctxJogo(j));
+      var rc = j.placar[0], rf = j.placar[1];
+      if (p.golA === rc && p.golB === rf) { exato++; return; }
+      var prev = p.golA > p.golB ? 1 : (p.golA < p.golB ? -1 : 0);
+      var real = rc > rf ? 1 : (rc < rf ? -1 : 0);
+      if (prev === real) resultado++; else incorreto++;
+    });
+    var total = exato + resultado + incorreto;
+    if (!total) return null;
+    var aprov = Math.round((exato + resultado) / total * 100);
+    function item(cls, ico, n, lbl) {
+      return '<div class="ps-item ' + cls + '"><div class="ps-ico">' + ico + "</div>" +
+        '<div><div class="ps-lbl">' + lbl + '</div><div class="ps-num">' + n + " jogo" + (n === 1 ? "" : "s") + "</div></div></div>";
+    }
+    return el(
+      '<div class="placar-stats">' +
+        '<h3>📊 Desempenho dos palpites <span class="aprov">' + aprov + "% de acerto</span></h3>" +
+        '<div class="ps-grid">' +
+          item("exato", "🎯", exato, "Acertou o placar") +
+          item("resultado", "✓", resultado, "Acertou o resultado") +
+          item("erro", "✕", incorreto, "Incorreto") +
+        "</div>" +
+        '<div class="ps-rodape">Comparando a previsão da análise com ' + total + " jogo" + (total === 1 ? "" : "s") + " já encerrado" + (total === 1 ? "" : "s") + ".</div>" +
+      "</div>"
+    );
+  }
+
   function renderJogos(container) {
+    var painel = painelAcertos();
+    if (painel) container.appendChild(painel);
     var js = jogosFiltrados(true);
     if (!js.length) {
       container.appendChild(el('<div class="vazio"><div class="big">🔍</div>Nenhum jogo encontrado com esses filtros.</div>'));
