@@ -10,7 +10,15 @@
 
   var D = window.COPA_DADOS;
   var A = window.Analise;
-  var hoje = D.TORNEIO.hoje;
+  // "hoje" = data local do navegador, para a página acompanhar o dia
+  // automaticamente (cai para TORNEIO.hoje se algo falhar).
+  var hoje = (function () {
+    try {
+      var d = new Date();
+      return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") +
+             "-" + String(d.getDate()).padStart(2, "0");
+    } catch (e) { return D.TORNEIO.hoje; }
+  })();
 
   // Estado da UI
   var estado = { aba: "jogos", busca: "", grupo: "todos", status: "proximos" };
