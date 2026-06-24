@@ -450,28 +450,29 @@
      entre C/D/E etc. (texto apenas ilustrativo do caminho).
      ------------------------------------------------------------------------- */
   var MATA_MATA = [
-    { fase: "32-avos", data: "2026-06-28", m: ["1A", "3CDFGI"] },
-    { fase: "32-avos", data: "2026-06-28", m: ["1C", "2F"] },
-    { fase: "32-avos", data: "2026-06-29", m: ["1E", "3ABFHI"] },
-    { fase: "32-avos", data: "2026-06-29", m: ["1F", "2C"] },
-    { fase: "32-avos", data: "2026-06-29", m: ["2A", "2B"] },
-    { fase: "32-avos", data: "2026-06-30", m: ["1I", "3CEFHL"] },
-    { fase: "32-avos", data: "2026-06-30", m: ["1B", "3EFGIJ"] },
-    { fase: "32-avos", data: "2026-06-30", m: ["1L", "3EHIJK"] },
-    { fase: "32-avos", data: "2026-07-01", m: ["1D", "3BEFIJ"] },
-    { fase: "32-avos", data: "2026-07-01", m: ["1G", "3AHIJK"] },
-    { fase: "32-avos", data: "2026-07-01", m: ["1H", "2J"] },
-    { fase: "32-avos", data: "2026-07-02", m: ["1J", "2H"] },
-    { fase: "32-avos", data: "2026-07-02", m: ["1K", "3DEIJL"] },
-    { fase: "32-avos", data: "2026-07-02", m: ["2E", "2I"] },
-    { fase: "32-avos", data: "2026-07-03", m: ["2K", "2L"] },
-    { fase: "32-avos", data: "2026-07-03", m: ["2D", "2G"] },
-    { fase: "16-avos", data: "2026-07-04", m: ["Vencedores 32-avos", ""] },
-    { fase: "Oitavas", data: "2026-07-04", m: ["Vencedores 16-avos", ""] },
-    { fase: "Quartas", data: "2026-07-09", m: ["Vencedores das oitavas", ""] },
-    { fase: "Semifinal", data: "2026-07-14", m: ["Vencedores das quartas", ""] },
-    { fase: "Disputa de 3º", data: "2026-07-18", m: ["Perdedores das semis", ""] },
-    { fase: "FINAL", data: "2026-07-19", m: ["Finalistas", ""] }
+    // 32-avos de final (Round of 32) — 16 jogos, 28/jun a 3/jul
+    { fase: "32-avos de final", data: "2026-06-28", m: ["1A", "3CDFGI"] },
+    { fase: "32-avos de final", data: "2026-06-28", m: ["1C", "2F"] },
+    { fase: "32-avos de final", data: "2026-06-29", m: ["1E", "3ABFHI"] },
+    { fase: "32-avos de final", data: "2026-06-29", m: ["1F", "2C"] },
+    { fase: "32-avos de final", data: "2026-06-29", m: ["2A", "2B"] },
+    { fase: "32-avos de final", data: "2026-06-30", m: ["1I", "3CEFHL"] },
+    { fase: "32-avos de final", data: "2026-06-30", m: ["1B", "3EFGIJ"] },
+    { fase: "32-avos de final", data: "2026-06-30", m: ["1L", "3EHIJK"] },
+    { fase: "32-avos de final", data: "2026-07-01", m: ["1D", "3BEFIJ"] },
+    { fase: "32-avos de final", data: "2026-07-01", m: ["1G", "3AHIJK"] },
+    { fase: "32-avos de final", data: "2026-07-01", m: ["1H", "2J"] },
+    { fase: "32-avos de final", data: "2026-07-02", m: ["1J", "2H"] },
+    { fase: "32-avos de final", data: "2026-07-02", m: ["1K", "3DEIJL"] },
+    { fase: "32-avos de final", data: "2026-07-02", m: ["2E", "2I"] },
+    { fase: "32-avos de final", data: "2026-07-03", m: ["2K", "2L"] },
+    { fase: "32-avos de final", data: "2026-07-03", m: ["2D", "2G"] },
+    // Rodadas seguintes (confrontos definidos após cada fase)
+    { fase: "Oitavas de final", data: "2026-07-04", m: ["8 jogos — vencedores dos 32-avos de final", ""] },
+    { fase: "Quartas de final", data: "2026-07-09", m: ["4 jogos — vencedores das oitavas de final", ""] },
+    { fase: "Semifinais", data: "2026-07-14", m: ["2 jogos — vencedores das quartas de final", ""] },
+    { fase: "Disputa de 3º lugar", data: "2026-07-18", m: ["Perdedores das semifinais", ""] },
+    { fase: "Final", data: "2026-07-19", m: ["Vencedores das semifinais", ""] }
   ];
 
   /* -------------------------------------------------------------------------
