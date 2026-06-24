@@ -14,7 +14,7 @@
     sedes: "Estados Unidos, Canadá e México",
     selecoes: 48,
     grupos: 12,
-    dataDados: "23/06/2026",
+    dataDados: "24/06/2026",
     hoje: "2026-06-23"
   };
 
@@ -438,7 +438,7 @@
     ["L",1,"2026-06-17","ENG","CRO",4,2],
     ["L",1,"2026-06-17","GHA","PAN",1,0],
     ["L",2,"2026-06-23","ENG","GHA",0,0],
-    ["L",2,"2026-06-23","PAN","CRO",null,null],
+    ["L",2,"2026-06-23","PAN","CRO",0,1],
     ["L",3,"2026-06-27","PAN","ENG",null,null],
     ["L",3,"2026-06-27","CRO","GHA",null,null]
   ];
