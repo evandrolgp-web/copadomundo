@@ -341,7 +341,7 @@
       return;
     }
     // Antes da definição dos confrontos: mostra o chaveamento (placeholders)
-    container.appendChild(el('<p style="color:var(--txt-mute);font-size:13px;margin:0 0 14px">Chaveamento do mata-mata (a partir de 28/jun). Os confrontos dependem da classificação final dos grupos — formato inédito de 48 seleções, com 32-avos de final. <b>Assim que os confrontos forem definidos, cada jogo aparecerá aqui com análise e provável vencedor automaticamente.</b></p>'));
+    container.appendChild(el('<p style="color:var(--txt-mute);font-size:13px;margin:0 0 14px">Chaveamento do mata-mata (a partir de 28/jun). Os confrontos dependem da classificação final dos grupos — formato inédito de 48 seleções, com 16-avos de final. <b>Assim que os confrontos forem definidos, cada jogo aparecerá aqui com análise e provável vencedor automaticamente.</b></p>'));
     var porFase = {};
     D.MATA_MATA.forEach(function (m) { (porFase[m.fase] = porFase[m.fase] || []).push(m); });
     Object.keys(porFase).forEach(function (fase) {

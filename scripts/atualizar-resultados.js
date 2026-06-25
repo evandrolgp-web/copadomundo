@@ -51,7 +51,7 @@ function codigo(nome) {
 function faseDe(stage) {
   const s = (stage || "").toUpperCase();
   if (s.includes("GROUP") || s.includes("LEAGUE")) return null;
-  if (s.includes("LAST_32") || s.includes("ROUND_OF_32")) return "32-avos de final";
+  if (s.includes("LAST_32") || s.includes("ROUND_OF_32")) return "16-avos de final";
   if (s.includes("LAST_16") || s.includes("ROUND_OF_16")) return "Oitavas de final";
   if (s.includes("QUARTER")) return "Quartas de final";
   if (s.includes("SEMI")) return "Semifinais";
@@ -99,7 +99,7 @@ function mock() {
       { a: "ENG", b: "GHA", ga: 2, gb: 1 }, { a: "PAN", b: "CRO", ga: 0, gb: 2 }
     ],
     mata: [
-      ["32-avos de final", "2026-06-28", "BRA", "NOR", null, null],
+      ["16-avos de final", "2026-06-28", "BRA", "NOR", null, null],
       ["Final", "2026-07-19", "ARG", "FRA", 2, 1]
     ]
   };

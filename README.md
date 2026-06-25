@@ -8,7 +8,7 @@ uma **análise completa** com o provável vencedor e a explicação do porquê.
 
 ## ✨ O que ela faz
 
-- **Tabela automática** dos 72 jogos da fase de grupos, gerada a partir do calendário real, além do chaveamento do mata-mata (formato inédito de 48 seleções, com 32-avos de final).
+- **Tabela automática** dos 72 jogos da fase de grupos, gerada a partir do calendário real, além do chaveamento do mata-mata (formato inédito de 48 seleções, com 16-avos de final).
 - **Análise de cada jogo** ao clicar, contendo:
   - 🔮 **Provável vencedor** com probabilidades de vitória/empate/derrota e placar estimado;
   - ⚔️ **Forma de jogar** de cada seleção (estilo + formação);
