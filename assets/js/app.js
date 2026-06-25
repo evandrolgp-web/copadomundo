@@ -188,20 +188,29 @@
     });
     var total = exato + resultado + incorreto;
     if (!total) return null;
+    var PTS_EXATO = 150, PTS_RES = 50;
+    var pontos = exato * PTS_EXATO + resultado * PTS_RES;
     var aprov = Math.round((exato + resultado) / total * 100);
-    function item(cls, ico, n, lbl) {
+    function fmt(n) { return n.toLocaleString("pt-BR"); }
+    function item(cls, ico, n, lbl, ptsCada) {
+      var sub = ptsCada
+        ? fmt(n) + " jogo" + (n === 1 ? "" : "s") + ' · <b style="color:var(--gold)">+' + fmt(n * ptsCada) + " pts</b>"
+        : fmt(n) + " jogo" + (n === 1 ? "" : "s") + " · 0 pts";
       return '<div class="ps-item ' + cls + '"><div class="ps-ico">' + ico + "</div>" +
-        '<div><div class="ps-lbl">' + lbl + '</div><div class="ps-num">' + n + " jogo" + (n === 1 ? "" : "s") + "</div></div></div>";
+        '<div><div class="ps-lbl">' + lbl + '</div><div class="ps-num">' + sub + "</div></div></div>";
     }
     return el(
       '<div class="placar-stats">' +
-        '<h3>📊 Desempenho dos palpites <span class="aprov">' + aprov + "% de acerto</span></h3>" +
-        '<div class="ps-grid">' +
-          item("exato", "🎯", exato, "Acertou o placar") +
-          item("resultado", "✓", resultado, "Acertou o resultado") +
-          item("erro", "✕", incorreto, "Incorreto") +
+        '<div class="ps-top">' +
+          "<h3>🏆 Placar dos palpites</h3>" +
+          '<div class="ps-pontos">' + fmt(pontos) + " <span>pts</span></div>" +
         "</div>" +
-        '<div class="ps-rodape">Comparando a previsão da análise com ' + total + " jogo" + (total === 1 ? "" : "s") + " já encerrado" + (total === 1 ? "" : "s") + ".</div>" +
+        '<div class="ps-grid">' +
+          item("exato", "🎯", exato, "Acertou o placar", PTS_EXATO) +
+          item("resultado", "✓", resultado, "Acertou o resultado", PTS_RES) +
+          item("erro", "✕", incorreto, "Incorreto", 0) +
+        "</div>" +
+        '<div class="ps-rodape"><b>150 pts</b> por placar exato · <b>50 pts</b> por acertar o resultado · ' + aprov + "% de acerto em " + fmt(total) + " jogo" + (total === 1 ? "" : "s") + ".</div>" +
       "</div>"
     );
   }
