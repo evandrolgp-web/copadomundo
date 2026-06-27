@@ -439,7 +439,7 @@
     ["L",1,"2026-06-17","GHA","PAN",1,0],
     ["L",2,"2026-06-23","ENG","GHA",0,0],
     ["L",2,"2026-06-23","PAN","CRO",0,1],
-    ["L",3,"2026-06-27","PAN","ENG",null,null],
+    ["L",3,"2026-06-27","PAN","ENG",0,2],
     ["L",3,"2026-06-27","CRO","GHA",null,null]
   ];
   // FIM_CALENDARIO  (não remova: marcador usado pela atualização automática)
