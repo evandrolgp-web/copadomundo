@@ -440,7 +440,7 @@
     ["L",2,"2026-06-23","ENG","GHA",0,0],
     ["L",2,"2026-06-23","PAN","CRO",0,1],
     ["L",3,"2026-06-27","PAN","ENG",0,2],
-    ["L",3,"2026-06-27","CRO","GHA",null,null]
+    ["L",3,"2026-06-27","CRO","GHA",2,1]
   ];
   // FIM_CALENDARIO  (não remova: marcador usado pela atualização automática)
 
@@ -482,6 +482,9 @@
      Enquanto vazio, a aba Mata-mata mostra o chaveamento (MATA_MATA acima).
      ------------------------------------------------------------------------- */
   var MATA_MATA_JOGOS = [
+    ["16-avos de final","2026-06-28","RSA","CAN",null,null],
+    ["16-avos de final","2026-06-29","BRA","JPN",null,null],
+    ["16-avos de final","2026-06-30","NED","MAR",null,null]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
 
