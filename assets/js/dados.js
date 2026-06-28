@@ -482,7 +482,7 @@
      Enquanto vazio, a aba Mata-mata mostra o chaveamento (MATA_MATA acima).
      ------------------------------------------------------------------------- */
   var MATA_MATA_JOGOS = [
-    ["16-avos de final","2026-06-28","RSA","CAN",null,null],
+    ["16-avos de final","2026-06-28","RSA","CAN",0,1],
     ["16-avos de final","2026-06-29","BRA","JPN",null,null],
     ["16-avos de final","2026-06-29","GER","PAR",null,null],
     ["16-avos de final","2026-06-30","CIV","NOR",null,null],
