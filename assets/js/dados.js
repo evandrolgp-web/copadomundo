@@ -484,7 +484,18 @@
   var MATA_MATA_JOGOS = [
     ["16-avos de final","2026-06-28","RSA","CAN",null,null],
     ["16-avos de final","2026-06-29","BRA","JPN",null,null],
-    ["16-avos de final","2026-06-30","NED","MAR",null,null]
+    ["16-avos de final","2026-06-29","GER","PAR",null,null],
+    ["16-avos de final","2026-06-30","CIV","NOR",null,null],
+    ["16-avos de final","2026-06-30","FRA","SWE",null,null],
+    ["16-avos de final","2026-06-30","NED","MAR",null,null],
+    ["16-avos de final","2026-07-01","BEL","SEN",null,null],
+    ["16-avos de final","2026-07-01","ENG","COD",null,null],
+    ["16-avos de final","2026-07-01","MEX","ECU",null,null],
+    ["16-avos de final","2026-07-02","ESP","AUT",null,null],
+    ["16-avos de final","2026-07-02","POR","CRO",null,null],
+    ["16-avos de final","2026-07-03","AUS","EGY",null,null],
+    ["16-avos de final","2026-07-03","SUI","ALG",null,null],
+    ["16-avos de final","2026-07-04","COL","GHA",null,null]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
 
