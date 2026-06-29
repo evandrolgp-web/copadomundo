@@ -484,7 +484,7 @@
   var MATA_MATA_JOGOS = [
     ["16-avos de final","2026-06-28","RSA","CAN",0,1],
     ["16-avos de final","2026-06-29","BRA","JPN",2,1],
-    ["16-avos de final","2026-06-29","GER","PAR",null,null],
+    ["16-avos de final","2026-06-29","GER","PAR",5,6],
     ["16-avos de final","2026-06-30","CIV","NOR",null,null],
     ["16-avos de final","2026-06-30","FRA","SWE",null,null],
     ["16-avos de final","2026-06-30","NED","MAR",null,null],
