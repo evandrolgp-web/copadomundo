@@ -110,10 +110,12 @@
   }
 
   // ------------------------------ filtros ----------------------------------
-  // comStatus=false ignora o filtro de situação (usado na aba "Por rodada")
-  function jogosFiltrados(comStatus) {
+  // comStatus=false ignora o filtro de situação (aba "Por rodada").
+  // incluirMata=true acrescenta os jogos do mata-mata (tela inicial).
+  function jogosFiltrados(comStatus, incluirMata) {
     var b = estado.busca.toLowerCase();
-    return JOGOS.filter(function (j) {
+    var base = incluirMata ? JOGOS.concat(JOGOS_MATA) : JOGOS;
+    return base.filter(function (j) {
       var ca = D.SELECOES[j.casa], fo = D.SELECOES[j.fora];
       if (estado.grupo !== "todos" && j.grupo !== estado.grupo) return false;
       if (comStatus && estado.status !== "todos") {
@@ -125,7 +127,7 @@
         }
       }
       if (b) {
-        var alvo = (ca.nome + " " + fo.nome + " grupo " + j.grupo).toLowerCase();
+        var alvo = (ca.nome + " " + fo.nome + " " + (j.grupo ? "grupo " + j.grupo : (j.fase || ""))).toLowerCase();
         if (alvo.indexOf(b) === -1) return false;
       }
       return true;
@@ -218,7 +220,7 @@
   function renderJogos(container) {
     var painel = painelAcertos();
     if (painel) container.appendChild(painel);
-    var js = jogosFiltrados(true);
+    var js = jogosFiltrados(true, true);   // inclui jogos do mata-mata
     if (!js.length) {
       container.appendChild(el('<div class="vazio"><div class="big">🔍</div>Nenhum jogo encontrado com esses filtros.</div>'));
       return;
