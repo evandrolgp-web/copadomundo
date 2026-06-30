@@ -495,6 +495,7 @@
     ["16-avos de final","2026-07-02","POR","CRO",null,null],
     ["16-avos de final","2026-07-03","AUS","EGY",null,null],
     ["16-avos de final","2026-07-03","SUI","ALG",null,null],
+    ["Oitavas de final","2026-07-04","CAN","MAR",null,null],
     ["16-avos de final","2026-07-04","COL","GHA",null,null]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
