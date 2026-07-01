@@ -26,7 +26,7 @@ const D = require(ARQ);
 const ALIAS = {
   "mexico": "MEX", "south africa": "RSA", "south korea": "KOR", "korea republic": "KOR",
   "czechia": "CZE", "czech republic": "CZE",
-  "switzerland": "SUI", "bosnia and herzegovina": "BIH", "bosnia": "BIH", "qatar": "QAT", "canada": "CAN",
+  "switzerland": "SUI", "bosnia and herzegovina": "BIH", "bosnia-herzegovina": "BIH", "bosnia & herzegovina": "BIH", "bosnia herzegovina": "BIH", "bosnia": "BIH", "qatar": "QAT", "canada": "CAN",
   "brazil": "BRA", "morocco": "MAR", "scotland": "SCO", "haiti": "HAI",
   "united states": "USA", "usa": "USA", "united states of america": "USA",
   "paraguay": "PAR", "australia": "AUS", "turkey": "TUR", "türkiye": "TUR", "turkiye": "TUR",
@@ -34,7 +34,7 @@ const ALIAS = {
   "ecuador": "ECU", "curacao": "CUW", "curaçao": "CUW",
   "netherlands": "NED", "japan": "JPN", "sweden": "SWE", "tunisia": "TUN",
   "belgium": "BEL", "egypt": "EGY", "iran": "IRN", "ir iran": "IRN", "new zealand": "NZL",
-  "spain": "ESP", "uruguay": "URU", "saudi arabia": "KSA", "cape verde": "CPV", "cabo verde": "CPV",
+  "spain": "ESP", "uruguay": "URU", "saudi arabia": "KSA", "cape verde": "CPV", "cabo verde": "CPV", "cape verde islands": "CPV", "cabo verde islands": "CPV",
   "france": "FRA", "norway": "NOR", "senegal": "SEN", "iraq": "IRQ",
   "argentina": "ARG", "austria": "AUT", "algeria": "ALG", "jordan": "JOR",
   "portugal": "POR", "colombia": "COL",
@@ -63,9 +63,16 @@ function faseDe(stage) {
 // Normaliza a resposta da API em { grupo:[...], mata:[...] } ----------------
 function normalizar(matches) {
   const grupo = [], mata = [];
+  const naoMapeados = new Set();
+  // ignora placeholders (ex.: "Winner Group A", "Runner-up ...") ao logar
+  const conhecido = function (n) { return n && !/winner|loser|runner|group|1st|2nd|3rd|tbd|to be|place/i.test(n); };
   matches.forEach(function (m) {
-    const a = codigo(m.homeTeam && m.homeTeam.name);
-    const b = codigo(m.awayTeam && m.awayTeam.name);
+    const hn = (m.homeTeam && m.homeTeam.name) || null;
+    const an = (m.awayTeam && m.awayTeam.name) || null;
+    const a = codigo(hn);
+    const b = codigo(an);
+    if (conhecido(hn) && !a) naoMapeados.add(hn);
+    if (conhecido(an) && !b) naoMapeados.add(an);
     const ft = (m.score && m.score.fullTime) || {};
     const fin = (m.status || "").toUpperCase() === "FINISHED" && ft.home != null && ft.away != null;
     const fase = faseDe(m.stage);
@@ -79,7 +86,7 @@ function normalizar(matches) {
   mata.sort(function (x, y) {
     return (x[1] + x[2] + x[3]).localeCompare(y[1] + y[2] + y[3]);
   });
-  return { grupo: grupo, mata: mata };
+  return { grupo: grupo, mata: mata, naoMapeados: [...naoMapeados] };
 }
 
 // Camada de API (troque aqui para usar outra fonte) -----------------------
@@ -159,6 +166,9 @@ function regravar(calendario, mata) {
     }
     const dados = usarMock ? mock() : await buscarDados(key);
     console.log("Grupo finalizados: " + dados.grupo.length + " | Mata-mata definidos: " + dados.mata.length);
+    if (dados.naoMapeados && dados.naoMapeados.length) {
+      console.log("⚠️ Nomes de seleção NÃO reconhecidos pela API: " + dados.naoMapeados.join(" | "));
+    }
 
     const calendario = D.CALENDARIO.map(function (e) { return e.slice(); });
     const nGrupo = aplicar(calendario, dados.grupo);
