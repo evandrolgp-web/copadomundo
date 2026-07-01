@@ -489,7 +489,7 @@
     ["16-avos de final","2026-06-30","FRA","SWE",3,0],
     ["16-avos de final","2026-06-30","NED","MAR",3,4],
     ["16-avos de final","2026-07-01","BEL","SEN",null,null],
-    ["16-avos de final","2026-07-01","ENG","COD",null,null],
+    ["16-avos de final","2026-07-01","ENG","COD",2,1],
     ["16-avos de final","2026-07-01","MEX","ECU",2,0],
     ["16-avos de final","2026-07-02","ESP","AUT",null,null],
     ["16-avos de final","2026-07-02","POR","CRO",null,null],
