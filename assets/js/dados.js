@@ -380,7 +380,7 @@
     ["B",2,"2026-06-18","SUI","BIH",4,1],
     ["B",2,"2026-06-18","CAN","QAT",6,0],
     ["B",3,"2026-06-24","SUI","CAN",2,1],
-    ["B",3,"2026-06-24","BIH","QAT",null,null],
+    ["B",3,"2026-06-24","BIH","QAT",3,1],
     ["C",1,"2026-06-13","BRA","MAR",1,1],
     ["C",1,"2026-06-13","SCO","HAI",1,0],
     ["C",2,"2026-06-19","MAR","SCO",1,0],
@@ -415,7 +415,7 @@
     ["H",1,"2026-06-15","KSA","URU",1,1],
     ["H",2,"2026-06-21","ESP","KSA",4,0],
     ["H",2,"2026-06-21","URU","CPV",2,2],
-    ["H",3,"2026-06-26","CPV","KSA",null,null],
+    ["H",3,"2026-06-26","CPV","KSA",0,0],
     ["H",3,"2026-06-26","URU","ESP",0,1],
     ["I",1,"2026-06-16","FRA","SEN",3,1],
     ["I",1,"2026-06-16","NOR","IRQ",4,1],
@@ -493,10 +493,14 @@
     ["16-avos de final","2026-07-01","MEX","ECU",2,0],
     ["16-avos de final","2026-07-02","ESP","AUT",null,null],
     ["16-avos de final","2026-07-02","POR","CRO",null,null],
+    ["16-avos de final","2026-07-02","USA","BIH",null,null],
+    ["16-avos de final","2026-07-03","ARG","CPV",null,null],
     ["16-avos de final","2026-07-03","AUS","EGY",null,null],
     ["16-avos de final","2026-07-03","SUI","ALG",null,null],
     ["Oitavas de final","2026-07-04","CAN","MAR",null,null],
-    ["16-avos de final","2026-07-04","COL","GHA",null,null]
+    ["16-avos de final","2026-07-04","COL","GHA",null,null],
+    ["Oitavas de final","2026-07-04","PAR","FRA",null,null],
+    ["Oitavas de final","2026-07-05","BRA","NOR",null,null]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
 
