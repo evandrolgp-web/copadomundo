@@ -14,7 +14,7 @@
     sedes: "Estados Unidos, Canadá e México",
     selecoes: 48,
     grupos: 12,
-    dataDados: "03/07/2026",
+    dataDados: "04/07/2026",
     hoje: "2026-06-23"
   };
 
@@ -494,7 +494,7 @@
     ["16-avos de final","2026-07-02","ESP","AUT",3,0],
     ["16-avos de final","2026-07-02","POR","CRO",2,1],
     ["16-avos de final","2026-07-02","USA","BIH",2,0],
-    ["16-avos de final","2026-07-03","ARG","CPV",null,null],
+    ["16-avos de final","2026-07-03","ARG","CPV",3,2],
     ["16-avos de final","2026-07-03","AUS","EGY",3,5],
     ["16-avos de final","2026-07-03","SUI","ALG",2,0],
     ["Oitavas de final","2026-07-04","CAN","MAR",null,null],
