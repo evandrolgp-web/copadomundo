@@ -14,7 +14,7 @@
     sedes: "Estados Unidos, Canadá e México",
     selecoes: 48,
     grupos: 12,
-    dataDados: "07/07/2026",
+    dataDados: "08/07/2026",
     hoje: "2026-06-23"
   };
 
@@ -508,7 +508,8 @@
     ["Oitavas de final","2026-07-07","USA","BEL",1,4],
     ["Quartas de final","2026-07-09","FRA","MAR",null,null],
     ["Quartas de final","2026-07-10","ESP","BEL",null,null],
-    ["Quartas de final","2026-07-11","NOR","ENG",null,null]
+    ["Quartas de final","2026-07-11","NOR","ENG",null,null],
+    ["Quartas de final","2026-07-12","ARG","SUI",null,null]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
 
