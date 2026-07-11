@@ -501,7 +501,7 @@
     ["16-avos de final","2026-07-04","COL","GHA",1,0],
     ["Oitavas de final","2026-07-04","PAR","FRA",0,1],
     ["Oitavas de final","2026-07-05","BRA","NOR",1,2],
-    ["Oitavas de final","2026-07-06","MEX","ENG",2,3],
+    ["Oitavas de final","2026-07-06","MEX","ENG",null,null],
     ["Oitavas de final","2026-07-06","POR","ESP",0,1],
     ["Oitavas de final","2026-07-07","ARG","EGY",3,2],
     ["Oitavas de final","2026-07-07","SUI","COL",4,3],
