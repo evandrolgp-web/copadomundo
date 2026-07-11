@@ -508,7 +508,7 @@
     ["Oitavas de final","2026-07-07","USA","BEL",1,4],
     ["Quartas de final","2026-07-09","FRA","MAR",2,0],
     ["Quartas de final","2026-07-10","ESP","BEL",2,1],
-    ["Quartas de final","2026-07-11","NOR","ENG",null,null],
+    ["Quartas de final","2026-07-11","NOR","ENG",1,2],
     ["Quartas de final","2026-07-12","ARG","SUI",null,null],
     ["Semifinais","2026-07-14","FRA","ESP",null,null]
   ];
