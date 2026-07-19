@@ -14,7 +14,7 @@
     sedes: "Estados Unidos, Canadá e México",
     selecoes: 48,
     grupos: 12,
-    dataDados: "18/07/2026",
+    dataDados: "19/07/2026",
     hoje: "2026-06-23"
   };
 
@@ -513,7 +513,7 @@
     ["Semifinais","2026-07-14","FRA","ESP",0,2],
     ["Semifinais","2026-07-15","ENG","ARG",1,2],
     ["Disputa de 3º lugar","2026-07-18","FRA","ENG",4,6],
-    ["Final","2026-07-19","ESP","ARG",null,null]
+    ["Final","2026-07-19","ESP","ARG",1,0]
   ];
   // FIM_MATA_JOGOS  (não remova: marcador usado pela atualização automática)
 
